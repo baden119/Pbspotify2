@@ -12,14 +12,14 @@ const App = () => {
     .get('https://airnet.org.au/rest/stations/3pbs/programs');
     res.data.forEach((program, index) => {
     if(program.programRestUrl !== "https://airnet.org.au/rest/stations/3pbs/programs/"){
-      setAppShowList([  
+      setAppShowList((AppShowList =>[ 
         ...AppShowList, 
         {
           id: index,
           name: program.name, 
           url: program.programRestUrl
         }
-      ]);
+      ]));
     // }
     console.log(program.name)
     }
