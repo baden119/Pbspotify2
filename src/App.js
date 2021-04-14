@@ -1,23 +1,36 @@
-import logo from './logo.svg';
+import React, { useState } from 'react'; 
 import './App.css';
+import axios from 'axios';
+import Showselect from './components/pbs/Showselect';
 
-function App() {
+const App = () => {
+
+  const [AppShowList, setAppShowList] = useState([]);
+
+  const getShowList = async () => {
+    const res = await axios
+    .get('https://airnet.org.au/rest/stations/3pbs/programs');
+    res.data.forEach((program, index) => {
+    if(program.programRestUrl !== "https://airnet.org.au/rest/stations/3pbs/programs/"){
+      setAppShowList([  
+        ...AppShowList, 
+        {
+          id: index,
+          name: program.name, 
+          url: program.programRestUrl
+        }
+      ]);
+    // }
+    console.log(program.name)
+    }
+    })  
+    // setAppShowList(res.data)
+  };
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Showselect getShowList={getShowList}/>
     </div>
   );
 }
