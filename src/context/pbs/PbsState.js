@@ -3,40 +3,64 @@ import axios from 'axios';
 import PbsContext from './pbsContext';
 import PbsReducer from './pbsReducer';
 import {
-    GET_SHOWLIST
+    GET_SHOWLIST, SHOW_SELECT_TEXT
 } from '../types';
 
 const PbsState = props => {
-    const initialState = {
-        showlist: []
-    };
+   
+  const initialState = {
+      AppShowList: [],
+      ShowSelectText: ''
+  };
 
-const [state, dispatch] = useReducer(PbsReducer, initialState);
+  const [state, dispatch] = useReducer(PbsReducer, initialState);
 
-// Get a list of Pbs Shows
-async GetShowList() {
-    const res = await axios
-    .get('https://airnet.org.au/rest/stations/3pbs/programs');
-    // console.log(res.data)
-    // res.data.forEach((program, index) => {
-    // if(program.programRestUrl !== "https://airnet.org.au/rest/stations/3pbs/programs/"){
-    //     this.setState({Showlist: [...this.state.Showlist, {id: index, name: program.name, url: program.programRestUrl}]});
-    // }
-    // })
+  // Get a list of Pbs Shows
+  const getShowList = async () => {
+      let ShowList = [];
+      const res = await axios
+      .get('https://airnet.org.au/rest/stations/3pbs/programs');
+      res.data.forEach((program, index) => {
+        if(program.programRestUrl !== "https://airnet.org.au/rest/stations/3pbs/programs/"){
+          //Create ShowList
+          ShowList = [...ShowList, {
+            id: index,
+            name: program.name, 
+            url: program.programRestUrl
+          }];
+        };
+      dispatch({
+        type: GET_SHOWLIST,
+        payload: ShowList
+      });
+    });
+  };
+
+  // Show Select Component Text
+
+  const setShowSelectText = () =>{
+    
     dispatch({
-        type: showlist,
-        payload: 'Data Payload Recieved'
-    });  
-};
+      type: SHOW_SELECT_TEXT,
+      payload: 'Context State Text Set'
+    });
 
-return <PbsContext.Provider
-value={{
-    Showlist: state.Showlist,
-    GetShowList
-}}
->
-{props.children}
-</PbsContext.Provider>
+    setTimeout(()=> (dispatch({
+      type: SHOW_SELECT_TEXT,
+      payload: ''
+    })), 4500);
+
+  };
+
+    return <PbsContext.Provider
+        value={{
+        AppShowList: state.AppShowList,
+        ShowSelectText: state.ShowSelectText,
+        getShowList,
+        setShowSelectText
+        }}>
+        {props.children}
+    </PbsContext.Provider>
 };
 
 export default PbsState;

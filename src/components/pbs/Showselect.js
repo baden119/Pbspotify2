@@ -1,41 +1,29 @@
-import React, { useState, useEffect } from 'react'
-// import axios from 'axios';
-// import pbsContext from '../../context/pbs/pbsContext';
+import React, { useState, useEffect, useContext } from 'react'
+import PbsContext from '../../context/pbs/pbsContext';
 
-const Showselect = ({ getShowList} ) => {
+const Showselect = () => {
+    
+    const pbsContext = useContext(PbsContext);
 
     useEffect(() => {
-        getShowList();
+        pbsContext.getShowList();
         // eslint-disable-next-line
       }, []);
 
-    // const pbsContext = useContext(pbsContext);
-
-    const [Showlist, setShowlist] = useState('');
-
+    // const [ShowSelectText, setShowSelectText] = useState('');
 
     const onClick = e =>{
-        setShowlist('Onclick Data Recieved')
-
+    pbsContext.setShowSelectText();
     };
+
     return (
         <div>
-            <button onClick={onClick}>Get Shows!</button>
+            <h2>Number of Shows in State: {pbsContext.AppShowList.length} </h2>
+            <button onClick={onClick}>Set Component State Text</button>
+            <h3>{pbsContext.ShowSelectText}</h3>
         </div>
     )
 }
 
 export default Showselect
 
-
-
-    // const GetShowList = async => {
-    //     const res = await axios
-    //     .get('https://airnet.org.au/rest/stations/3pbs/programs');
-    //     // res.data.forEach((program, index) => {
-    //     // if(program.programRestUrl !== "https://airnet.org.au/rest/stations/3pbs/programs/"){
-    //     //     this.setState({Showlist: [...this.state.Showlist, {id: index, name: program.name, url: program.programRestUrl}]});
-    //     // }
-    //     // })  
-    //     this.setState({Showlist:['Data Recieved!']})
-    // };
