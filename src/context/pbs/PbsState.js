@@ -3,14 +3,15 @@ import axios from 'axios';
 import PbsContext from './pbsContext';
 import PbsReducer from './pbsReducer';
 import {
-    GET_SHOWLIST, SHOW_SELECT_TEXT
+    GET_SHOWLIST, SET_SHOW, SHOW_SELECT_TEXT
 } from '../types';
 
 const PbsState = props => {
    
   const initialState = {
-      AppShowList: [],
-      ShowSelectText: ''
+      ShowList: [],
+      ShowSelectText: '',
+      SelectedShow: {}
   };
 
   const [state, dispatch] = useReducer(PbsReducer, initialState);
@@ -37,27 +38,34 @@ const PbsState = props => {
   };
 
   // Show Select Component Text
-
+  // For testing only
   const setShowSelectText = () =>{
-    
     dispatch({
       type: SHOW_SELECT_TEXT,
       payload: 'Context State Text Set'
     });
-
     setTimeout(()=> (dispatch({
       type: SHOW_SELECT_TEXT,
       payload: ''
     })), 4500);
+  };
 
+  // Save selected show info to state.
+  const setShow = (show) => {
+    dispatch({
+      type: SET_SHOW,
+      payload: show
+    });
   };
 
     return <PbsContext.Provider
         value={{
-        AppShowList: state.AppShowList,
+        ShowList: state.ShowList,
         ShowSelectText: state.ShowSelectText,
+        SelectedShow: state.SelectedShow,
         getShowList,
-        setShowSelectText
+        setShowSelectText,
+        setShow
         }}>
         {props.children}
     </PbsContext.Provider>

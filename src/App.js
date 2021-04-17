@@ -1,6 +1,7 @@
 import React from 'react'; 
 import './App.css';
-import Showselect from './components/pbs/Showselect';
+import EpisodeDisplay from './components/pbs/EpisodeDisplay';
+import Showselect from './components/pbs/ShowSelect';
 
 import PbsState from './context/pbs/PbsState';
 
@@ -10,7 +11,8 @@ const App = () => {
     <PbsState>
       <div className="App">
         <Showselect/>
-      </div>  
+        <EpisodeDisplay />
+      </div>    
     </PbsState>
   );
 }
