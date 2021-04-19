@@ -21,16 +21,8 @@ const Showselect = () => {
         });
     };
 
-    //Test function to save text to app level state via context API
-    const onClick = () =>{
-        pbsContext.setShowSelectText();
-    };
-
     return (
         <div>
-            <h2>Number of Shows in State: {pbsContext.ShowList.length} </h2>
-            <button onClick={onClick}>Set Component State Text</button>
-            <h3>{pbsContext.ShowSelectText}</h3>
             
             <select name="selected show" id="show_select_dropdown" onChange={e => showSelection(e)}>
                 {pbsContext.ShowList.map((show) => (

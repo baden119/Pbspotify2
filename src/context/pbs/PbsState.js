@@ -3,15 +3,15 @@ import axios from 'axios';
 import PbsContext from './pbsContext';
 import PbsReducer from './pbsReducer';
 import {
-    GET_SHOWLIST, SET_SHOW, SHOW_SELECT_TEXT
+    GET_SHOWLIST, SET_SHOW, SET_SONGLIST
 } from '../types';
 
 const PbsState = props => {
    
   const initialState = {
       ShowList: [],
-      ShowSelectText: '',
-      SelectedShow: {}
+      SelectedShow: {},
+      SongList: []
   };
 
   const [state, dispatch] = useReducer(PbsReducer, initialState);
@@ -37,19 +37,6 @@ const PbsState = props => {
     });
   };
 
-  // Show Select Component Text
-  // For testing only
-  const setShowSelectText = () =>{
-    dispatch({
-      type: SHOW_SELECT_TEXT,
-      payload: 'Context State Text Set'
-    });
-    setTimeout(()=> (dispatch({
-      type: SHOW_SELECT_TEXT,
-      payload: ''
-    })), 4500);
-  };
-
   // Save selected show info to state.
   const setShow = (show) => {
     dispatch({
@@ -58,14 +45,25 @@ const PbsState = props => {
     });
   };
 
+  // Save Songs from selected episode to state.
+
+    const setSongList = (songlist) =>{
+      console.log("PbsState SetSonglist call")
+      console.log(songlist)
+      dispatch({
+        type: SET_SONGLIST,
+        payload: songlist
+      });
+    };
+
     return <PbsContext.Provider
         value={{
         ShowList: state.ShowList,
-        ShowSelectText: state.ShowSelectText,
         SelectedShow: state.SelectedShow,
+        SongList: state.SongList,
         getShowList,
-        setShowSelectText,
-        setShow
+        setShow,
+        setSongList
         }}>
         {props.children}
     </PbsContext.Provider>

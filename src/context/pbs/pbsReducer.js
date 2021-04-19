@@ -1,7 +1,7 @@
 import {
-        GET_SHOWLIST,
+    GET_SHOWLIST,
     SET_SHOW,
-        SHOW_SELECT_TEXT 
+    SET_SONGLIST,
     } from '../types';
 
 // eslint-disable-next-line
@@ -12,15 +12,15 @@ export default (state, action) => {
             ...state,
             ShowList: action.payload
             };
-        case SHOW_SELECT_TEXT:
-            return{
-            ...state,
-            ShowSelectText: action.payload
-            };
         case SET_SHOW:
             return{
             ...state,
             SelectedShow: action.payload
+            };
+        case SET_SONGLIST:
+            return{
+            ...state,
+            SongList: action.payload
             };
         default:
             return state;
