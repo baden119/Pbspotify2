@@ -43,9 +43,8 @@ const EpisodesDisplay = () => {
 
     return (
         <div>
-            <h3>Episode Display</h3>
             <h2>{pbsContext.SelectedShow.name}</h2>
-            <h5>Number of Episodes in State: {EpisodeList.length}</h5>
+            {/* <h5>Number of Episodes in State: {EpisodeList.length}</h5> */}
 
             <div style={episodeStyle}> 
                 {EpisodeList.map((episode) => (

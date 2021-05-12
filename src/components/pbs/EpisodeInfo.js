@@ -19,7 +19,6 @@ function EpisodeInfo(props) {
         let PlayList = [];
         const res = await axios
         .get(`${props.episode.episodeRestUrl}/playlists`)
-        console.log(res.data);
         res.data.forEach((song, index) => {
             //Create Songlist
             PlayList = [...PlayList,{

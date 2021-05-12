@@ -48,8 +48,6 @@ const PbsState = props => {
   // Save Songs from selected episode to state.
 
     const setSongList = (songlist) =>{
-      console.log("PbsState SetSonglist call")
-      console.log(songlist)
       dispatch({
         type: SET_SONGLIST,
         payload: songlist

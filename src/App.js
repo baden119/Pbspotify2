@@ -13,12 +13,13 @@ const App = () => {
   return (
     <PbsState>
       <div className="App">
+        <Spotify />
         <Showselect />
         <EpisodesDisplay />
-        <Spotify />
       </div>    
     </PbsState>
   );
 }
 
 export default App;
+
