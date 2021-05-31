@@ -19,6 +19,14 @@ const Searcher = ({ spotify }) => {
             console.error(err);
           }
         );
+      spotify.getTrack('5gOd6zDC8vhlYjqbQdJVWP').then(
+        function (data) {
+          console.log(data);
+        },
+        function (err) {
+          console.error(err);
+        }
+      );
     };
 
 

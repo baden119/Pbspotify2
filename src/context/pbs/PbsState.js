@@ -45,13 +45,47 @@ const PbsState = props => {
     });
   };
 
-  // Save Songs from selected episode to state.
+  // Save Songs from selected Show to state.
+    const setSongList = async () =>{
+      // let EpisodeURLS = [];
+      let SongList = [];
+      if (state.SelectedShow.url !== undefined){
+        axios.get(`${state.SelectedShow.url}/episodes`)
+        .then(function (response) {
+          response.data.forEach((episode, index) => {
+            axios.get(`${episode.episodeRestUrl}/playlists`)
+            .then(function (response) {
+              response.data.map((SongData) => (
+                // console.log(SongData)
+                SongList = [...SongList, {
+                  track: SongData.track, 
+                  artist: SongData.artist 
+                }]
+              ));
+              dispatch({
+                type: SET_SONGLIST,
+                payload: SongList
+              });
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
+          });
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
 
-    const setSongList = (songlist) =>{
-      dispatch({
-        type: SET_SONGLIST,
-        payload: songlist
-      });
+        
+        // const res = await axios
+        // .get(`${episode.episodeRestUrl}/playlists`);
+        // console.log(res.data);
+        
+        
+
+      };
     };
 
     return <PbsContext.Provider

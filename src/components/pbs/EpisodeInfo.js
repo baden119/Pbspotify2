@@ -33,8 +33,8 @@ function EpisodeInfo(props) {
     
     return (
         <div>
-            <h2>{props.episode.title}</h2>
-            <p>{props.episode.description}</p>
+            <h4>{props.episode.title}</h4>
+            <small>{props.episode.description}</small>
             <ul>
             {SongList.map((song) => (
                 <li key={song.key}>{song.artist} / {song.track}</li>

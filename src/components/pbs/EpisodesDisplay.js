@@ -24,16 +24,15 @@ const EpisodesDisplay = () => {
     const getEpisodeList = async () => {
 
         if(Object.keys(pbsContext.SelectedShow).length > 1){
-
-        const res = await axios
-        .get(`${pbsContext.SelectedShow.url}/episodes?numAfter=0&numBefore=10`)
-        res.data.sort((a, b) => a.start < b.start ? 1: -1);
-        res.data.forEach((episode, index) => {
-            if (!episode.title){
-                episode.title = '(No Episode Title Found)'
-            };
-            setEpisodeList(EpisodeList => [...EpisodeList, {id: index, episodeData: episode}]);
-          })
+            const res = await axios
+            .get(`${pbsContext.SelectedShow.url}/episodes?numAfter=0&numBefore=10`)
+            res.data.sort((a, b) => a.start < b.start ? 1: -1);
+            res.data.forEach((episode, index) => {
+                if (!episode.title){
+                    episode.title = '(No Title)'
+                };
+                setEpisodeList(EpisodeList => [...EpisodeList, {id: index, episodeData: episode}]);
+            })
         };
     };
 

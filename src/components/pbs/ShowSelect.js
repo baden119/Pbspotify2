@@ -8,30 +8,38 @@ const Showselect = () => {
     //Gets a list of PBS Shows
     useEffect(() => {
         pbsContext.getShowList();
+        // pbsContext.setShow(pbsContext.ShowList[0])
         // eslint-disable-next-line
       }, []);
 
 
-    const showSelection = (e) =>{
-        pbsContext.ShowList.forEach((show, index) => {
+    const showSelection = async (e) =>{
+        pbsContext.ShowList.forEach((show) => {
             if(String(show.id) === e.target.value){
                 // Save show info to PbsState
-                pbsContext.setShow(show);
+                pbsContext.setShow(show)
             }
         });
     };
 
     return (
-        <div>
-            
+        <div style={showSelectStyle}>
             <select name="selected show" id="show_select_dropdown" onChange={e => showSelection(e)}>
                 {pbsContext.ShowList.map((show) => (
-                    <option key={show.id} value={show.id}>{show.name}</option>
+                    <option key={show.id} value={show.id} >{show.name}</option>
                 ))};
             </select>
         </div>
     )
 }
 
+const showSelectStyle = {
+    display: 'grid',
+    // backgroundColor: 'yellow',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center'
+};
 export default Showselect
 
