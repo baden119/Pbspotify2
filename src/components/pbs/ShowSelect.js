@@ -8,7 +8,6 @@ const Showselect = () => {
     //Gets a list of PBS Shows
     useEffect(() => {
         pbsContext.getShowList();
-        // pbsContext.setShow(pbsContext.ShowList[0])
         // eslint-disable-next-line
       }, []);
 
@@ -41,5 +40,6 @@ const showSelectStyle = {
     alignItems: 'center',
     textAlign: 'center'
 };
+
 export default Showselect
 

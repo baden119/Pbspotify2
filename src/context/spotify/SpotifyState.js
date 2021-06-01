@@ -3,23 +3,29 @@ import React, { useReducer } from 'react';
 import SpotifyContext from './spotifyContext';
 import SpotifyReducer from './spotifyReducer';
 import {
-    SET_LOGGED_IN
+    SET_SPOTIFY_API
 } from '../types';
 
 const SpotifyState = props => {
    
     const initialState = {
-        IsLoggedIn: false
+        Spotify_API: null
     };
-  
-    // Set Logged In
-    const setLoggedIn = () => dispatch({ type: SET_LOGGED_IN }); 
-
+    
     const [state, dispatch] = useReducer(SpotifyReducer, initialState);
-  
+    
+    // Set Spotify Api
+    const setSpotify_API = (Spotify_API) => {
+        dispatch({
+            type: SET_SPOTIFY_API,
+            payload: Spotify_API
+        });
+    };
+        
       return <SpotifyContext.Provider
           value={{
-              IsLoggedIn: state.IsLoggedIn
+              Spotify_API: state.Spotify_API,
+              setSpotify_API
           }}>
           {props.children}
       </SpotifyContext.Provider>

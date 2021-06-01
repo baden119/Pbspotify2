@@ -5,6 +5,7 @@ import PbsReducer from './pbsReducer';
 import {
     GET_SHOWLIST, SET_SHOW, SET_SONGLIST
 } from '../types';
+import SonglistComparison from '../../components/spotify/SonglistComparison';
 
 const PbsState = props => {
    
@@ -45,47 +46,39 @@ const PbsState = props => {
     });
   };
 
-  // Save Songs from selected Show to state.
+  // Get Songlist for selected show.
     const setSongList = async () =>{
-      // let EpisodeURLS = [];
       let SongList = [];
-      if (state.SelectedShow.url !== undefined){
-        axios.get(`${state.SelectedShow.url}/episodes`)
-        .then(function (response) {
-          response.data.forEach((episode, index) => {
-            axios.get(`${episode.episodeRestUrl}/playlists`)
-            .then(function (response) {
-              response.data.map((SongData) => (
-                // console.log(SongData)
-                SongList = [...SongList, {
-                  track: SongData.track, 
-                  artist: SongData.artist 
-                }]
-              ));
-              dispatch({
-                type: SET_SONGLIST,
-                payload: SongList
-              });
-            })
-            .catch(function (error) {
-              // handle error
-              console.log(error);
-            })
-          });
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        })
-
-        
-        // const res = await axios
-        // .get(`${episode.episodeRestUrl}/playlists`);
-        // console.log(res.data);
-        
-        
-
-      };
+        if (state.SelectedShow.url !== undefined){
+          axios.get(`${state.SelectedShow.url}/episodes`)
+          .then(function (response) {
+            response.data.forEach((episode, index) => {
+              axios.get(`${episode.episodeRestUrl}/playlists`)
+              .then(function (response) {
+                if (SongList.length < 100){
+                  response.data.map((SongData) => (
+                    SongList = [...SongList, {
+                      track: SongData.track, 
+                      artist: SongData.artist 
+                    }]
+                  ));
+                };
+                dispatch({
+                  type: SET_SONGLIST,
+                  payload: SongList
+                });
+              })
+              .catch(function (error) {
+                // handle error
+                console.log(error);
+              })
+            });
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+        };
     };
 
     return <PbsContext.Provider

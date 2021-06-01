@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import '../../App.css';
 import Login from './Login';
-import Searcher from './Searcher';
+// import Searcher from './Searcher';
 import PlaylistMaker from './PlaylistMaker';
 import { getTokenFromUrl } from "./config";
 import SpotifyWebApi from "spotify-web-api-js";
@@ -24,6 +24,7 @@ function Spotify() {
       if (_token) {
         setToken(_token);
         spotify_api.setAccessToken(_token);
+        spotifyContext.setSpotify_API(spotify_api)
       }
     }, []);
 
@@ -33,9 +34,9 @@ function Spotify() {
         {token ? <h5>Logged in</h5> : <Login />}
       </div>
 
-      <div>
-      {token ? <PlaylistMaker spotify={spotify_api} /> : <div></div> }
-      </div> 
+      {/* <div>
+      {token ? <PlaylistMaker /> : <div></div> }
+      </div>  */}
     </div>
   
         // {/* <h1>{String(spotifyContext.IsLoggedIn)}</h1> */}

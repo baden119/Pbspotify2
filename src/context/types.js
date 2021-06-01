@@ -4,4 +4,5 @@ export const SET_SONGLIST = 'SET_SONGLIST';
 
 export const IS_LOGGED_IN = 'IS_LOGGED_IN';
 export const SET_LOGGED_IN ='SET_LOGGED_IN';
+export const SET_SPOTIFY_API = 'SET_SPOTIFY_API';
 

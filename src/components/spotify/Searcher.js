@@ -1,44 +1,53 @@
 import React, { useState, useContext } from 'react'
 import PbsContext from '../../context/pbs/pbsContext';
+import SpotifyContext from "../../context/spotify/spotifyContext";
 
-const Searcher = ({ spotify }) => {
+const Searcher = () => {
 
     const pbsContext = useContext(PbsContext);
+    const spotifyContext = useContext(SpotifyContext);
     const [searchField, setsearchField] = useState('');
     const [searchResults, setsearchResults] = useState({});
 
     const onChange = e => setsearchField(e.target.value)
 
     const spotify_test= async () => {
-      spotify.searchTracks(searchField).then(
+
+    pbsContext.SongList.map((song, index) => {
+
+      // console.log(song.track +" "+ song.artist);
+
+      spotifyContext.Spotify_API.searchTracks((song.track +" "+ song.artist), { limit: 5 }).then(
           function (data) {
-            console.log(data);
-            setsearchResults(data.tracks.items);
+            console.log(song, data.tracks.items);
+            // setsearchResults(data.tracks.items);
           },
           function (err) {
             console.error(err);
           }
         );
-      spotify.getTrack('5gOd6zDC8vhlYjqbQdJVWP').then(
-        function (data) {
-          console.log(data);
-        },
-        function (err) {
-          console.error(err);
-        }
-      );
+    })
+
+    //     spotifyContext.Spotify_API.getTrack('5gOd6zDC8vhlYjqbQdJVWP').then(
+    //     function (data) {
+    //       console.log(data);
+    //     },
+    //     function (err) {
+    //       console.error(err);
+    //     }
+      // );
     };
 
 
   return (
     <div>
-      <input 
+      {/* <input 
         type="text" 
         placeholder="Search Spotify" 
         name="searchField" 
         value={searchField} 
         onChange={onChange}
-      />
+      /> */}
       <button onClick={ () => spotify_test()}>Search</button> 
 
     <h5>Songs in State: {pbsContext.SongList.length}</h5>
