@@ -1,66 +1,43 @@
-import React, { useState, useContext } from 'react'
+import React, {useContext} from 'react'
 import PbsContext from '../../context/pbs/pbsContext';
 import SpotifyContext from "../../context/spotify/spotifyContext";
 
 const Searcher = () => {
 
-    const pbsContext = useContext(PbsContext);
-    const spotifyContext = useContext(SpotifyContext);
-    const [searchField, setsearchField] = useState('');
-    const [searchResults, setsearchResults] = useState({});
+  const pbsContext = useContext(PbsContext);
+  const spotifyContext = useContext(SpotifyContext);
 
-    const onChange = e => setsearchField(e.target.value)
-
-    const spotify_test= async () => {
-
-    pbsContext.SongList.map((song, index) => {
-
-      // console.log(song.track +" "+ song.artist);
-
-      spotifyContext.Spotify_API.searchTracks((song.track +" "+ song.artist), { limit: 5 }).then(
-          function (data) {
-            console.log(song, data.tracks.items);
-            // setsearchResults(data.tracks.items);
-          },
-          function (err) {
-            console.error(err);
-          }
+  //Uses Spotify API to search through PBS Songlist. 
+  //Saves results to Spotify Context (SpotifySearchResults)
+  //Can change search results limit here
+  const SpotifySearch= async () => {
+    let results = []
+    pbsContext.SongList.forEach((song) => {
+      spotifyContext.Spotify_API.searchTracks((song.track +" "+ song.artist), { limit: 3 }).then(
+        function (data) {
+          results = [...results, {id: song.id, data: data.tracks.items}];
+          results.sort(function (a, b){return a.id - b.id});
+          spotifyContext.setSpotifySearchResults(results);
+        },
+        function (err) {
+          console.error(err);
+        },
         );
     })
+  };
 
-    //     spotifyContext.Spotify_API.getTrack('5gOd6zDC8vhlYjqbQdJVWP').then(
-    //     function (data) {
-    //       console.log(data);
-    //     },
-    //     function (err) {
-    //       console.error(err);
-    //     }
-      // );
-    };
-
-
-  return (
-    <div>
-      {/* <input 
-        type="text" 
-        placeholder="Search Spotify" 
-        name="searchField" 
-        value={searchField} 
-        onChange={onChange}
-      /> */}
-      <button onClick={ () => spotify_test()}>Search</button> 
-
-    <h5>Songs in State: {pbsContext.SongList.length}</h5>
-
-    {searchResults.length > 0 && 
-    <div>
-        <h3>Number of Search Results: {searchResults.length}</h3>
-        <h4>Top Result "{searchResults[0].name}" by {searchResults[0].artists[0].name}</h4>
-    </div>
-    }
-        
-    </div>
-  )
+  if (spotifyContext.Spotify_API != null){
+    return (
+      <div>
+        <button onClick={ () => SpotifySearch()}>Search</button> 
+        <h5>Songs in State: {pbsContext.SongList.length}</h5>
+      </div>
+    )
+  }
+  else
+    return (
+      <h3>Login with Spotify to Search</h3>
+    )
 }
 
 export default Searcher

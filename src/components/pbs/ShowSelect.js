@@ -12,7 +12,7 @@ const Showselect = () => {
       }, []);
 
 
-    const showSelection = async (e) =>{
+    const showSelection =   (e) =>{
         pbsContext.ShowList.forEach((show) => {
             if(String(show.id) === e.target.value){
                 // Save show info to PbsState

@@ -1,8 +1,6 @@
-import React, { useEffect, useState, useContext } from "react";
-import '../../App.css';
+import React, { useEffect, useContext, useState, Fragment } from "react";
 import Login from './Login';
-// import Searcher from './Searcher';
-import PlaylistMaker from './PlaylistMaker';
+// import PlaylistMaker from './PlaylistMaker';
 import { getTokenFromUrl } from "./config";
 import SpotifyWebApi from "spotify-web-api-js";
 import SpotifyContext from "../../context/spotify/spotifyContext";
@@ -12,7 +10,7 @@ const spotify_api = new SpotifyWebApi();
 function Spotify() {
 
   const spotifyContext = useContext(SpotifyContext);
-  const [token, setToken] = useState();
+  const [PlaylistOption, setPlaylistOption] = useState('CreateNew');
 
   // Taken from:
   // https://github.com/atharvadeosthale/spotify-clone/blob/master/src/App.js
@@ -22,25 +20,32 @@ function Spotify() {
       const _token = hash.access_token;
   
       if (_token) {
-        setToken(_token);
+        // setToken(_token);
         spotify_api.setAccessToken(_token);
-        spotifyContext.setSpotify_API(spotify_api)
+        spotifyContext.setSpotify_API(spotify_api);
       }
+    // eslint-disable-next-line
     }, []);
 
+    const onChangeHandler = event => {
+      console.log("onchange")
+      setPlaylistOption(event.target.value);
+    };
+  
   return (
     <div style={spotifyStyle}>
       <div>
-        {token ? <h5>Logged in</h5> : <Login />}
+        {spotifyContext.Spotify_ID ? <Fragment>Logged in as <b>{spotifyContext.Spotify_ID.display_name}</b></Fragment> : <Login />}
       </div>
 
-      {/* <div>
-      {token ? <PlaylistMaker /> : <div></div> }
-      </div>  */}
+      <div>
+      {spotifyContext.Spotify_ID && 
+      <select>
+          <option value={'CreateNew'} onChange={onChangeHandler}>Create a New Playlist</option>
+          <option value={'SelectExisting'} onChange={onChangeHandler}>Select a Playlist</option>
+      </select>}
+      </div> 
     </div>
-  
-        // {/* <h1>{String(spotifyContext.IsLoggedIn)}</h1> */}
-        //   <Searcher spotify={spotify_api} />
   )
 }
 

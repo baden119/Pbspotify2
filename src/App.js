@@ -28,11 +28,8 @@ const App = () => {
 
 const indexPage = {
     display: 'grid',
-    // gridTemplateColumns:'repeat(2, 1fr)',
     gridTemplateRows:'repeat(4)',
-    gridGap: '5px',
-    // gridTemplateAreas: `'loginPage loginPage loginPage',
-    //   'showSelectPage showSelectPage showSelectPage'`
+    // gridGap: '5px',
   };
 
 const loginPage={
@@ -50,62 +47,6 @@ const searcherPage = {
 const songlistComparisonPage = {
   backgroundColor:'aqua'
 };
-    // .header {
-  //   grid-area: header;
-  //   background-color: aqua;
-  // }
-  // .Login {
-  //   height: 100px;
-  //   width: 100%;
-  //   margin: auto;
-  //   justify-content: center;
-  //   align-items: center;
-  //   text-align: center;
-  //   display: grid;
-  //   grid-template-columns: 0.5fr 1.5fr;
-  //   grid-template-rows: 1fr;
-  //   gap: 0px 0px;
-  //   grid-template-areas: 'Login-Button Playlist-Creator';
-  //   grid-area: Login;
-  //   background-color: lightpink;
-  // }
-  // .Login-Button {
-  //   grid-area: Login-Button;
-  // }
-  // .Playlist-Creator {
-  //   background-color: blueviolet;
-  //   grid-area: Playlist-Creator;
-  // }
-
-  // .wrapper {
-  //   display: grid;
-  //   grid-template-columns: 100px 100px;
-  //   /* grid-template-areas: "header header"
-  //                           "aside main"
-  //                           "footer footer"; */
-  // }
-  
-  // .header {
-  //   grid-area: header;
-  //   background-color: aqua;
-  // }
-  
-  // .main {
-  //   grid-area: main;
-  //   background-color: lightgreen;
-  // }
-  
-  // .aside {
-  //   grid-area: aside;
-  //   background-color: yellow;
-  // }
-  
-  // .footer {
-  //   grid-area: footer;
-  //   background-color: pink;
-  // }
-
-
 
   
 export default App;

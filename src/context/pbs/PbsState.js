@@ -5,12 +5,15 @@ import PbsReducer from './pbsReducer';
 import {
     GET_SHOWLIST, SET_SHOW, SET_SONGLIST
 } from '../types';
-import SonglistComparison from '../../components/spotify/SonglistComparison';
 
 const PbsState = props => {
    
   const initialState = {
-      ShowList: [],
+      ShowList: [{
+        id: 0,
+        name: 'Select a PBS Show', 
+        url: null
+      }],
       SelectedShow: {},
       SongList: []
   };
@@ -19,7 +22,7 @@ const PbsState = props => {
 
   // Get a list of Pbs Shows
   const getShowList = async () => {
-      let ShowList = [];
+      let ShowList = state.ShowList;
       const res = await axios
       .get('https://airnet.org.au/rest/stations/3pbs/programs');
       res.data.forEach((program, index) => {
@@ -47,39 +50,57 @@ const PbsState = props => {
   };
 
   // Get Songlist for selected show.
-    const setSongList = async () =>{
-      let SongList = [];
-        if (state.SelectedShow.url !== undefined){
-          axios.get(`${state.SelectedShow.url}/episodes`)
-          .then(function (response) {
-            response.data.forEach((episode, index) => {
-              axios.get(`${episode.episodeRestUrl}/playlists`)
-              .then(function (response) {
-                if (SongList.length < 100){
-                  response.data.map((SongData) => (
-                    SongList = [...SongList, {
-                      track: SongData.track, 
-                      artist: SongData.artist 
-                    }]
-                  ));
-                };
-                dispatch({
-                  type: SET_SONGLIST,
-                  payload: SongList
-                });
-              })
-              .catch(function (error) {
-                // handle error
-                console.log(error);
-              })
-            });
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-        };
-    };
+const setSongList = async () =>{
+
+  // Function to clean up inputs from PBS playlists.
+  const cleanString = (string) =>{
+    string=string.split('-')[0]
+    string=string.split('(')[0]
+    string=string.split('ft.')[0]
+    string=string.split('feat.')[0]
+    return string;
+  };
+
+  let SongList = [];
+  if (state.SelectedShow.url != null){
+    //Loop through all episodes episodes of selected show
+    axios.get(`${state.SelectedShow.url}/episodes`)
+    .then(function (response) {
+      response.data.forEach((episode) => {
+        //Loop through playlist for each episode
+        axios.get(`${episode.episodeRestUrl}/playlists`)
+        .then(function (response) {
+          //Add songs to songlist. Can control max size of songlist here.
+          if (SongList.length < 100){
+            response.data.map((SongData) => (
+              SongList = [...SongList, {
+                id: SongData.id,
+                track: cleanString(SongData.track), 
+                artist: cleanString(SongData.artist) 
+              }]
+            ));
+          };
+          // Sort SongList by id
+          SongList.sort(function (a, b){
+            return a.id - b.id;
+          });
+          dispatch({
+            type: SET_SONGLIST,
+            payload: SongList
+          });
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+      });
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
+  };
+};
 
     return <PbsContext.Provider
         value={{

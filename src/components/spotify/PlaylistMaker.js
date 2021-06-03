@@ -1,22 +1,11 @@
 import React, { useState, useContext } from "react";
 import SpotifyContext from "../../context/spotify/spotifyContext";
 const PlaylistMaker = () => {
+  const spotifyContext = useContext(SpotifyContext);
 
-    const [userID, setuserID] = useState('');
-    const [playlists, setplaylists] = useState([]);
-    const [selectedPlaylist, setselectedPlaylist] = useState({});
-    const spotifyContext = useContext(SpotifyContext);
+  const [playlists, setplaylists] = useState([]);
+    // const [selectedPlaylist, setselectedPlaylist] = useState({});
 
-    const get_id = async () => {
-        spotifyContext.Spotify_API.getMe().then(
-            function (data) {
-              setuserID(data.id);
-            },
-            function (err) {
-              console.error(err);
-            }
-          );
-      };
     const get_playlists = async () => {
       spotifyContext.Spotify_API.getUserPlaylists(userID).then(
             function (data) {
