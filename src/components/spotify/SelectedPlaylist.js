@@ -7,6 +7,7 @@ function SelectedPlaylist() {
     const [OldPlaylistTracks, setOldPlaylistTracks] = useState([]);
 
     useEffect(() => {
+        setOldPlaylistTracks([]);
         if(spotifyContext.Spotify_ID){
             spotifyContext.Spotify_API.getPlaylistTracks(spotifyContext.SelectedPlaylist.id).then(
                 function (data) {
@@ -19,28 +20,18 @@ function SelectedPlaylist() {
                 }
             );
         };
+        // eslint-disable-next-line 
     }, [spotifyContext.SelectedPlaylist]);
 
-    const renderOldPlaylistTracks = () => {
-        // for (const item of OldPlaylistTracks) {
-        //     return(
-        //         <li>{item.track} / {item.artist} ({item.index})</li>
-        //     );
-        // };
-        OldPlaylistTracks.forEach((item) =>  {
-        return(
-            <li>{item.track} / {item.artist} ({item.index})</li>
-        );
-        })
-
-    };
 
     return (
         <div>
-            <h3 style={{margin:'0', textAlign: 'center'}}> Spotify PlayList </h3>
-            <h5>{spotifyContext.SelectedPlaylist.name}</h5>
+            <h5>Playlist: {spotifyContext.SelectedPlaylist.name}</h5>
+            {/* TODO css class for background colour to diff old playlist tracks. */}
             <ul>
-                {renderOldPlaylistTracks()}
+            {OldPlaylistTracks.map((item) =>  (
+            <li key={item.id}>{item.track} / {item.artist}</li>
+             ))}
             </ul>
         </div>
     )

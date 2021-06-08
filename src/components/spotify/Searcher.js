@@ -1,6 +1,7 @@
 import React, {useContext} from 'react'
 import PbsContext from '../../context/pbs/pbsContext';
 import SpotifyContext from "../../context/spotify/spotifyContext";
+import SelectedPlaylist from './SelectedPlaylist';
 
 const Searcher = () => {
 
@@ -26,8 +27,30 @@ const Searcher = () => {
       )})
   };
 
+  const saveSongs = () => {
+    let URI_array = []
 
-  if (spotifyContext.Spotify_API != null){
+    spotifyContext.SpotifySearchResults.forEach((result) => {
+      if(result.data.length){
+        URI_array = [...URI_array, result.data[0].uri]
+      }
+    });
+
+    spotifyContext.Spotify_API.addTracksToPlaylist(spotifyContext.SelectedPlaylist.id, URI_array).then(
+      function (data) {
+        console.log(data)
+        //Alert Playlist Save Success.
+        //Need to update Selected Playlist, somehow.
+      },
+      function (err) {
+        console.error(err);
+      },
+    )
+  };
+
+
+  const renderSearchButton = () => {
+    if (spotifyContext.Spotify_API != null){
     return (
       <div>
         <button onClick={ () => SpotifySearch()}>Search</button> 
@@ -39,6 +62,38 @@ const Searcher = () => {
     return (
       <h3>Login with Spotify to Search</h3>
     )
-}
+  };
+ 
+  const renderSaveSongsButton = () => {
+    if(spotifyContext.Spotify_API != null && Object.keys(spotifyContext.SelectedPlaylist).length !== 0 && spotifyContext.SpotifySearchResults.length){
+      return(
+        <button onClick={ () => saveSongs()}>Save Songs to Playlist</button>
+      )
+    }
+    else
+      return(
+        <span>Criteria not met yet</span>
+      )
+
+  };
+
+  return (
+    <div style ={searcherStyle}>
+      <div>
+        {renderSearchButton()}
+      </div>
+      <div>
+        {renderSaveSongsButton()}
+      </div>
+
+    </div>
+  )
+};
+const searcherStyle = {
+  display: 'grid',
+  width: '100%',
+  height: '100%',
+  gridTemplateColumns:'repeat(2, 70% 30%)'
+};
 
 export default Searcher

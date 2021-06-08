@@ -29,6 +29,7 @@ function Spotify() {
     }, []);
 
     const onChangeHandler = event => {
+      spotifyContext.setselectedPlaylist({});
       setPlaylistOption(event.target.value);
     };
 

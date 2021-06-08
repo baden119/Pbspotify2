@@ -3,35 +3,46 @@ import SpotifyContext from "../../context/spotify/spotifyContext";
 
 const PlaylistMaker = () => {
 
+  const spotifyContext = useContext(SpotifyContext);
+  const [playlistName, setPlaylistName] = useState('');
+
+  const onNameChange = e => setPlaylistName(e.target.value)
+  
+  const onCreateClick = () =>{
+    spotifyContext.Spotify_API.createPlaylist(spotifyContext.Spotify_ID.id, {name: playlistName, public: false, description: "Created by PBSpotify."}).then(
+      function (data) {
+        spotifyContext.setselectedPlaylist(data);
+        //TODO Alert success
+        setPlaylistName('');
+
+      },
+      function (err) {
+        console.error(err);
+      }
+    )};
   return (
     <div>
         <input   
-            placeholder="Playlist Name" 
+            placeholder="New Playlist Name" 
             name="playlistName" 
-            // value={playlistName} 
-            // onChange={onChange}
+            value={playlistName} 
+            onChange={onNameChange}
         />
         <div>
-          <textarea
-          style={{width: 'auto', display: 'block'}}
-          type="textarea" 
-          placeholder="Description" 
-          name="playlistDescription"  
-          />
-          {/* <button onClick={console.log("click")}>Create PlayList</button> */}
+          <button onClick={onCreateClick}>Create PlayList</button>
         </div>  
     </div>
 )
 }
 
-const playlistMakerStyle = {
-  display: 'grid',
-  gridTemplateRows:'repeat(2, 1fr)',
-  justifyContent: 'center',
-  alignItems: 'center',
-  textAlign: 'center',
-  width: '100%'
+// const playlistMakerStyle = {
+//   display: 'grid',
+//   gridTemplateRows:'repeat(2, 1fr)',
+//   justifyContent: 'center',
+//   alignItems: 'center',
+//   textAlign: 'center',
+//   width: '100%'
 
-};
+// };
 
 export default PlaylistMaker

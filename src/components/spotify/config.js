@@ -7,7 +7,6 @@ const clientId = "33a2bac1ec3649429a5db59eac210602";
 
 const scopes = [
   "user-read-private",
-  "playlist-modify-public",
   "playlist-modify-private"
 ];
 

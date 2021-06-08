@@ -47,6 +47,8 @@ const SpotifyState = props => {
         });
     };
 
+    
+
     // Save Spotify Search Results
     const setSpotifySearchResults = (results) => {
         dispatch({
