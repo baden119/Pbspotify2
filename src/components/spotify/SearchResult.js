@@ -28,11 +28,7 @@ function SearchResult(songId) {
       </React.Fragment>
     )
   }
-  else return(
-  <React.Fragment>
-    Begin Search
-  </React.Fragment>
-  )
+  else return null;
 
 };
 

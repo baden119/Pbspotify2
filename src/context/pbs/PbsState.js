@@ -56,8 +56,15 @@ const setSongList = async () =>{
   const cleanString = (string) =>{
     string=string.split('-')[0]
     string=string.split('(')[0]
+    string=string.split('+')[0]
+    string=string.split('[')[0]
     string=string.split('ft.')[0]
     string=string.split('feat.')[0]
+    string=string.split('feat')[0]
+    string=string.split('FT')[0]
+    
+    // Just remove dont cut rest of string.
+    // string=string.split('|')[0]
     return string;
   };
 
@@ -71,7 +78,7 @@ const setSongList = async () =>{
         axios.get(`${episode.episodeRestUrl}/playlists`)
         .then(function (response) {
           //Add songs to songlist. Can control max size of songlist here.
-          if (SongList.length < 100){
+          if (SongList.length < 30){
             response.data.map((SongData) => (
               SongList = [...SongList, {
                 id: SongData.id,

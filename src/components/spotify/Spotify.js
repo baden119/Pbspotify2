@@ -1,6 +1,7 @@
 import React, { useEffect, useContext, useState, Fragment } from "react";
 import Login from './Login';
-// import PlaylistMaker from './PlaylistMaker';
+import PlaylistMaker from './PlaylistMaker';
+import PlaylistSelecter from './PlaylistSelecter';
 import { getTokenFromUrl } from "./config";
 import SpotifyWebApi from "spotify-web-api-js";
 import SpotifyContext from "../../context/spotify/spotifyContext";
@@ -28,35 +29,54 @@ function Spotify() {
     }, []);
 
     const onChangeHandler = event => {
-      console.log("onchange")
       setPlaylistOption(event.target.value);
     };
+
+    const renderPlaylistSelect = () => {
+      if(spotifyContext.Spotify_ID){
+        return(
+          <select onChange={onChangeHandler}>
+            <option value={'CreateNew'}>Create a New Spotify PlayList</option>
+            <option value={'SelectExisting'}>Select PlayList from your Library</option>
+          </select>
+        )
+      }
+    };
+
+    const renderPlaylistComponent = () => {
+      if (spotifyContext.Spotify_ID){
+        if (PlaylistOption === 'CreateNew'){
+          return(
+            <PlaylistMaker />
+          )}
+        else{
+          return(
+            <PlaylistSelecter />
+          )}
+      }
+    }
   
   return (
     <div style={spotifyStyle}>
       <div>
         {spotifyContext.Spotify_ID ? <Fragment>Logged in as <b>{spotifyContext.Spotify_ID.display_name}</b></Fragment> : <Login />}
       </div>
-
       <div>
-      {spotifyContext.Spotify_ID && 
-      <select>
-          <option value={'CreateNew'} onChange={onChangeHandler}>Create a New Playlist</option>
-          <option value={'SelectExisting'} onChange={onChangeHandler}>Select a Playlist</option>
-      </select>}
-      </div> 
+        {renderPlaylistSelect()}
+        {renderPlaylistComponent()}
+      </div>
     </div>
   )
 }
 
 const spotifyStyle = {
   display: 'grid',
-  gridTemplateColumns:'15% 85%',
+  gridTemplateColumns:'repeat(2, 1fr)',
   backgroundColor:'pink',
   minHeight:'100px',
-  height:'auto',
+  // height:'auto',
   justifyContent: 'center',
-  alignItems: 'center',
-  textAlign: 'center'
+  // alignItems: 'center',
+  // textAlign: 'center',
 };
 export default Spotify

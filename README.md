@@ -1,6 +1,6 @@
 # TODOs
 
 - Episodes searched in reverse chronological order
-- disable search functionality when not logged in
 - Save login
-- fix show select initial option
+- limit search rates in searcher.js (https://www.npmjs.com/package/request-rate-limiter)
+- Make a number of positive matches for spotify similar to 'songs in state'

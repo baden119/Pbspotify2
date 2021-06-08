@@ -1,6 +1,7 @@
 import React, { useEffect, useContext } from 'react'
 import PbsContext from '../../context/pbs/pbsContext';
 import SearchResult from './SearchResult';
+import SelectedPlaylist from './SelectedPlaylist';
 
 function SonglistComparison() {
     
@@ -30,9 +31,7 @@ function SonglistComparison() {
                     ))}
                 </tbody>
             </table>
-            <div>
-                    <h3 style={{margin:'0', textAlign: 'center'}}> Spotify Playlist </h3>
-            </div> 
+            <SelectedPlaylist />
         </div>
     )
 }
@@ -44,7 +43,7 @@ const songListComparisonStyle = {
     // margin: '10px',
     // justifyContent: 'center',
     // alignItems: 'center',
-    gridTemplateColumns:'repeat(2, 70% 30%)',
+    gridTemplateColumns:'repeat(2, 70% 30%)'
 
     
 } 

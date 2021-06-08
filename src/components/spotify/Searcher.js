@@ -18,13 +18,14 @@ const Searcher = () => {
           results = [...results, {id: song.id, data: data.tracks.items}];
           results.sort(function (a, b){return a.id - b.id});
           spotifyContext.setSpotifySearchResults(results);
+          //Setting a timeout to prevent API rate limit errors
         },
         function (err) {
           console.error(err);
         },
-        );
-    })
+      )})
   };
+
 
   if (spotifyContext.Spotify_API != null){
     return (
