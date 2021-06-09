@@ -39,6 +39,12 @@ const Searcher = () => {
     spotifyContext.Spotify_API.addTracksToPlaylist(spotifyContext.SelectedPlaylist.id, URI_array).then(
       function (data) {
         console.log(data)
+        //Create Clear input functions in both context!
+
+        
+        // SpotifyContext.setselectedPlaylist();
+        // SpotifyContext.setSpotifySearchResults();
+        // PbsContext.setShow();
         //Alert Playlist Save Success.
         //Need to update Selected Playlist, somehow.
       },
