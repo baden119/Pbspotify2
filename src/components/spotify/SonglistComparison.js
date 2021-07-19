@@ -7,11 +7,24 @@ function SonglistComparison() {
     
     const pbsContext = useContext(PbsContext); 
 
-    //Gets a SongList from selected PBS Show
-    useEffect(() => {
-        pbsContext.setSongList();
-    // eslint-disable-next-line
-      }, [pbsContext.SelectedShow]);
+    // //Gets a SongList from selected PBS Show
+    // useEffect(() => {
+    //     // console.log(pbsContext.SongList);
+    // // eslint-disable-next-line
+    //   }, [pbsContext.SongList]);
+
+
+    const renderSongListData = (song) => {
+        // console.log(song);
+        // console.log("data sent?>")
+        // return(
+
+        //     // <tr key={song.id}>
+        //     //     <td style={{border:'1px solid'}}>{song.track} {song.artist} {song.date}</td>
+        //     //     {/* <td style={{border:'1px solid'}}><SearchResult songId={song.id} /></td> */}
+        //     // </tr>
+        // )
+    }
 
     return (
         <div style={songListComparisonStyle}>
@@ -23,12 +36,13 @@ function SonglistComparison() {
                     </tr>
                 </thead>
                 <tbody>
-                    {pbsContext.SongList.map((song) => (
-                        <tr key={song.id}>
-                            <td style={{border:'1px solid'}}>{song.track} {song.artist}</td>
-                            <td style={{border:'1px solid'}}><SearchResult songId={song.id} /></td>
+                    {pbsContext.SongList.forEach((song) => {
+                        // console.log(renderSongListData(song))
+                        <tr>
+                            <td>Some Fucjing Shit</td>
                         </tr>
-                    ))}
+                        // renderSongListData(song)
+                    })}
                 </tbody>
             </table>
             <SelectedPlaylist />
