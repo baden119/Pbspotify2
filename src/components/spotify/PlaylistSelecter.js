@@ -8,7 +8,7 @@ function PlaylistSelecter() {
         spotifyContext.Spotify_API.getUserPlaylists(spotifyContext.Spotify_ID.id).then(
             function (data) {
                 setplaylists(data.items);
-                spotifyContext.setselectedPlaylist(data.items[0])
+                spotifyContext.setSelectedPlaylist(data.items[0])
             },
             function (err) {
                 console.error(err);
@@ -24,7 +24,7 @@ function PlaylistSelecter() {
     const onChangeHandler = event => {
         playlists.forEach((playlist) => {
             if(playlist.id === event.target.value){
-                spotifyContext.setselectedPlaylist(playlist);
+                spotifyContext.setSelectedPlaylist(playlist);
 
         }});
       };

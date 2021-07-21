@@ -1,16 +1,25 @@
 # TODOs
 
-- Save login
-- limit search rates in searcher.js (https://www.npmjs.com/package/request-rate-limiter)
-- Make a number of positive matches for spotify similar to 'songs in state'
+Before First Deploy
+
+- Remember how to deploy
+
+Later On
+
+- Loading Spinner
+- Playlists of more than 100 songs.
+- limit search rates in searcher.js
 - useEffect, learn about those dependency errors that keep coming up.
-- PBS Songlist, hide info from individual episodes (https://stackoverflow.com/questions/42197834/ how-to-hide-and-show-list-contents-reactjs)
+- Vairable number of episodes searched
+- Broadcast date in seperate column
 
-- Alerts
-  -Trying to create playlist w/o name field, Successfully create playlist
+Bad Design
 
-- Delete
-  -EpisodeDisplay and EpisodeInfo
+- SelectedPlaylist refresh after playlist creation (SelectedPlaylist.js) is hacky and bad design.
 
 DONE!
+->Alerts
+-Trying to create playlist w/o name field, Successfully create playlist
+-Save songs to playlist
+-> Save login
 -> Episodes searched in reverse chronological order

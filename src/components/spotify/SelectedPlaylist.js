@@ -9,6 +9,8 @@ function SelectedPlaylist() {
     useEffect(() => {
         setOldPlaylistTracks([]);
         if(spotifyContext.Spotify_ID){
+
+            //TODO for consistanst this could be replaced with asynx/await
             spotifyContext.Spotify_API.getPlaylistTracks(spotifyContext.SelectedPlaylist.id).then(
                 function (data) {
                     data.items.forEach((item, index) => {
@@ -21,17 +23,17 @@ function SelectedPlaylist() {
             );
         };
         // eslint-disable-next-line 
-    }, [spotifyContext.SelectedPlaylist]);
+        // TODO This refresh on search result feels super hacky and bad design
+    }, [spotifyContext.SelectedPlaylist, spotifyContext.SpotifySearchResults]);
 
-
+    
     return (
         <div>
             <h5>Playlist: {spotifyContext.SelectedPlaylist.name}</h5>
-            {/* TODO css class for background colour to diff old playlist tracks. */}
             <ul>
-            {OldPlaylistTracks.map((item) =>  (
-            <li key={item.id}>{item.track} / {item.artist}</li>
-             ))}
+                {OldPlaylistTracks.map((item) =>  (
+                    <li key={item.id}>{item.track} / {item.artist}</li>
+                ))}
             </ul>
         </div>
     )

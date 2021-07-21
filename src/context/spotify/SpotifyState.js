@@ -6,7 +6,7 @@ import {
     SET_SELECTED_PLAYLIST,
     SET_SPOTIFY_API,
     SET_SPOTIFY_ID,
-    SET_SPOTIFY_SEARCH_RESULTS
+    SET_SPOTIFY_SEARCH_RESULTS,
 } from '../types';
 
 const SpotifyState = props => {
@@ -15,7 +15,7 @@ const SpotifyState = props => {
         Spotify_API: null,
         Spotify_ID: null,
         SpotifySearchResults: [],
-        SelectedPlaylist: {}
+        SelectedPlaylist: {},
     };
     
     const [state, dispatch] = useReducer(SpotifyReducer, initialState);
@@ -40,14 +40,12 @@ const SpotifyState = props => {
     };
 
     // Set Selected Spotify Playlist
-    const setselectedPlaylist = (playlist) => {
+    const setSelectedPlaylist = (playlist) => {
         dispatch({
             type: SET_SELECTED_PLAYLIST,
             payload: playlist
         });
     };
-
-    
 
     // Save Spotify Search Results
     const setSpotifySearchResults = (results) => {
@@ -64,8 +62,8 @@ const SpotifyState = props => {
               SelectedPlaylist: state.SelectedPlaylist,
               SpotifySearchResults: state.SpotifySearchResults,
               setSpotify_API,
-              setselectedPlaylist,
-              setSpotifySearchResults
+              setSelectedPlaylist,
+              setSpotifySearchResults,
           }}>
           {props.children}
       </SpotifyContext.Provider>

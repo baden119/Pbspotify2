@@ -1,22 +1,25 @@
 import React, { useState, useContext } from "react";
 import SpotifyContext from "../../context/spotify/spotifyContext";
+import { useAlert } from 'react-alert'
 
 const PlaylistMaker = () => {
 
   const spotifyContext = useContext(SpotifyContext);
   const [playlistName, setPlaylistName] = useState('');
 
+  const alert = useAlert()
   const onNameChange = e => setPlaylistName(e.target.value)
   
   const onCreateClick = () =>{
     spotifyContext.Spotify_API.createPlaylist(spotifyContext.Spotify_ID.id, {name: playlistName, public: false, description: "Created by PBSpotify."}).then(
       function (data) {
-        spotifyContext.setselectedPlaylist(data);
-        //TODO Alert success
+        spotifyContext.setSelectedPlaylist(data);
+        alert.success(data.name + ' Playlist Created!')
         setPlaylistName('');
 
       },
       function (err) {
+        alert.error("Error: Playlist needs a name");
         console.error(err);
       }
     )};
@@ -34,15 +37,5 @@ const PlaylistMaker = () => {
     </div>
 )
 }
-
-// const playlistMakerStyle = {
-//   display: 'grid',
-//   gridTemplateRows:'repeat(2, 1fr)',
-//   justifyContent: 'center',
-//   alignItems: 'center',
-//   textAlign: 'center',
-//   width: '100%'
-
-// };
 
 export default PlaylistMaker

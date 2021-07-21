@@ -21,15 +21,15 @@ function Spotify() {
       const _token = hash.access_token;
   
       if (_token) {
-        // setToken(_token);
         spotify_api.setAccessToken(_token);
         spotifyContext.setSpotify_API(spotify_api);
       }
     // eslint-disable-next-line
     }, []);
 
+
     const onChangeHandler = event => {
-      spotifyContext.setselectedPlaylist({});
+      spotifyContext.setSelectedPlaylist({});
       setPlaylistOption(event.target.value);
     };
 

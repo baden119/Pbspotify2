@@ -2,7 +2,7 @@ import {
     SET_SPOTIFY_API,
     SET_SPOTIFY_ID,
     SET_SPOTIFY_SEARCH_RESULTS,
-    SET_SELECTED_PLAYLIST
+    SET_SELECTED_PLAYLIST,
     } from '../types';
 
     // eslint-disable-next-line
