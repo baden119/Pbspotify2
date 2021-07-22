@@ -37,6 +37,8 @@ const Searcher = () => {
   
   const SpotifySearch = async () => {
 
+    alert.info("Search Started")
+    alert.info("Please Wait")
     const resultsList = await Promise.all(pbsContext.SongList.map(async (song) => {
       try{
         // Basic Search
@@ -68,11 +70,16 @@ const Searcher = () => {
 
       } 
     }))
+    alert.info("Search Complete.")
+    alert.info("Now save songs to playlist!")
     spotifyContext.setSpotifySearchResults(resultsList);
   };
 
   const saveSongs = () => {
-    let URI_array = []
+    let URI_array = [];
+
+    // Spotify has a limit on how many songs can be added to a playlist with one request.
+    const API_limit = 99;
 
     //TODO Functionality for > 100 song playlists.
     spotifyContext.SpotifySearchResults.forEach((song) => {
@@ -81,17 +88,34 @@ const Searcher = () => {
       }
     });
 
-    spotifyContext.Spotify_API.addTracksToPlaylist(spotifyContext.SelectedPlaylist.id, URI_array).then(
-      function (data) {
-        console.log("SaveSongs Result", data)
-        alert.success("Success! Songs saved to Spotify Playlist")
-        spotifyContext.setSpotifySearchResults([]);
-        //Need to update Selected Playlist, somehow.
-      },
-      function (err) {
-        console.error(err);
-      },
-    )
+    let adjusted_arrays = URI_array.reduce((adjusted, item, index) => {
+      const limit_index = Math.floor(index/API_limit)
+
+      if(!adjusted[limit_index]){
+        adjusted[limit_index] = [] //Start a new limited array
+      }        
+
+        adjusted[limit_index].push(item)
+        return adjusted
+      }, [])
+     console.log(adjusted_arrays)
+    
+     adjusted_arrays.forEach((array) => {
+
+         spotifyContext.Spotify_API.addTracksToPlaylist(spotifyContext.SelectedPlaylist.id, array).then(
+           function (data) {
+             console.log("SaveSongs Result", data)
+            },
+            function (err) {
+              console.error(err);
+            },
+            )
+          })
+          alert.success("Success! Songs saved to Spotify Playlist")
+    // }) ??????
+
+
+
   };
 
 
