@@ -1,6 +1,6 @@
 # TODOs
 
-Object Test Phase Begin.
+-Objectifying Song Data.
 
 Later On
 
