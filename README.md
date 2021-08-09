@@ -1,8 +1,6 @@
 # TODOs
 
-Before First Deploy
-
-- Remember how to deploy
+Object Test Phase Begin.
 
 Later On
 
@@ -18,6 +16,7 @@ Bad Design
 - SelectedPlaylist refresh after playlist creation (SelectedPlaylist.js) is hacky and bad design.
 
 DONE!
+->First Deploy
 ->Alerts
 -Trying to create playlist w/o name field, Successfully create playlist
 -Save songs to playlist
