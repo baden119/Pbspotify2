@@ -1,8 +1,9 @@
 import {
     SET_SPOTIFY_API,
     SET_SPOTIFY_ID,
-    SET_SPOTIFY_SEARCH_RESULTS,
     SET_SELECTED_PLAYLIST,
+    SET_SONGLIST,
+    SET_COMPLETED_SEARCH
     } from '../types';
 
     // eslint-disable-next-line
@@ -23,10 +24,15 @@ export default (state, action) => {
                 ...state,
                 SelectedPlaylist: action.payload
                 };
-            case SET_SPOTIFY_SEARCH_RESULTS:
+            case SET_SONGLIST:
                 return {
                 ...state,
-                SpotifySearchResults: action.payload
+                SongList: action.payload
+                };
+            case SET_COMPLETED_SEARCH:
+                return {
+                ...state,
+                CompletedSearch: action.payload
                 };
         default:
             return state;

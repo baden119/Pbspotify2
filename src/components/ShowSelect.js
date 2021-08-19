@@ -1,15 +1,17 @@
 import React, { useEffect, useContext, useState } from 'react'
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form'
 import axios from 'axios';
-import PbsContext from '../../context/pbs/pbsContext';
-import SpotifyContext from '../../context/spotify/spotifyContext';
+import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
+import Song from './Song';
 
 const Showselect = () => {
 
-    const pbsContext = useContext(PbsContext);
-    const spotifyContext = useContext(SpotifyContext);
+    const pbspotifyContext = useContext(PBSpotifyContext);
     
     // Set number of episodes to fetch
-    const episodeCount = 3;
+    const episodeCount = 2;
 
     const [selectedShow, setSelectedShow] = useState(JSON.parse(localStorage.getItem('localShowStorage')) || {});
     const [showList, setShowList] = useState([]);
@@ -22,7 +24,7 @@ const Showselect = () => {
 
     useEffect(() => {
         getSongList();
-        spotifyContext.setSpotifySearchResults([])
+        pbspotifyContext.setSongList([])
         localStorage.setItem('localShowStorage', JSON.stringify(selectedShow));
         // eslint-disable-next-line
         }, [selectedShow]);
@@ -88,28 +90,31 @@ const Showselect = () => {
         const runAsyncFunctions = async () => {
             if (selectedShow.url != null){
 
+                let idcount = 0
                 const episodes = await getEpisodeList()
                 const songList = await Promise.all(
                     episodes.map(async (episode) => {
-                        let episodeSongList = [];
+                        const songList = [];
                         const episodedata = await getEpisodeData(episode)
-                            episodedata.forEach((song, index) => {
-                                episodeSongList = [...episodeSongList, {
-                                    id: song.id,
-                                    track: song.track, 
-                                    artist: song.artist,
-                                    date: episode.start,
-                                    index: index
-                                }]
+                            episodedata.forEach((item) => {
+                                const song = Song(
+                                    idcount, 
+                                    item.track, 
+                                    item.artist, 
+                                    episode.start
+                                );
+                                idcount += 1;
+                                songList.push(song);
                             })
-                        return episodeSongList
+                        return songList
                     })
                 )
-                pbsContext.setSongList(songList.flat());
+                // flat() concaternates the seperate episode arrays down into a single array.
+                pbspotifyContext.setSongList(songList.flat());
+                pbspotifyContext.setCompletedSearch(false);
             };
+        };
         
-        }
-    
     runAsyncFunctions();
 };
 
@@ -125,29 +130,24 @@ const Showselect = () => {
     };
 
     return (
-        <div style={showSelectStyle}>
-            <select name="selected show" id="show_select_dropdown" value ={selectedShow.id} onChange={e => showSelectionHandler(e)}>
-                {showList.map((show) => {
-                    return (
-                        show.id === selectedShow.id ?
-                        <option key={show.id} value={show.id} >{show.name}</option>
-                        :
-                        <option key={show.id} value={show.id} >{show.name}</option>
-                    )
-                })};
-            </select>
-        </div>
+            <Row>
+                <Col>
+                    <Form.Select name="selected show" id="show_select_dropdown" value ={selectedShow.id} onChange={e => showSelectionHandler(e)}>
+                        {showList.map((show) => {
+                            return (
+                                show.id === selectedShow.id ?
+                                <option key={show.id} value={show.id} >{show.name}</option>
+                                :
+                                <option key={show.id} value={show.id} >{show.name}</option>
+                            )
+                        })};
+                    </Form.Select>
+                
+                </Col>
+            </Row>
     )
 }
 
-const showSelectStyle = {
-    display: 'grid',
-    // backgroundColor: 'yellow',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center'
-};
 
 export default Showselect
 

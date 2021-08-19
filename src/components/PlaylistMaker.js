@@ -1,19 +1,19 @@
 import React, { useState, useContext } from "react";
-import SpotifyContext from "../../context/spotify/spotifyContext";
+import PBSpotifyContext from "../context/pbspotify/pbspotifyContext";
 import { useAlert } from 'react-alert'
 
 const PlaylistMaker = () => {
 
-  const spotifyContext = useContext(SpotifyContext);
+  const pbspotifyContext = useContext(PBSpotifyContext);
   const [playlistName, setPlaylistName] = useState('');
 
   const alert = useAlert()
   const onNameChange = e => setPlaylistName(e.target.value)
   
   const onCreateClick = () =>{
-    spotifyContext.Spotify_API.createPlaylist(spotifyContext.Spotify_ID.id, {name: playlistName, public: false, description: "Created by PBSpotify."}).then(
+    pbspotifyContext.Spotify_API.createPlaylist(pbspotifyContext.Spotify_ID.id, {name: playlistName, public: false, description: "Created by PBSpotify."}).then(
       function (data) {
-        spotifyContext.setSelectedPlaylist(data);
+        pbspotifyContext.setSelectedPlaylist(data);
         alert.success(data.name + ' Playlist Created!')
         setPlaylistName('');
 

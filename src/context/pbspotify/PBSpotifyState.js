@@ -1,24 +1,26 @@
 import React, { useReducer } from 'react';
 
-import SpotifyContext from './spotifyContext';
-import SpotifyReducer from './spotifyReducer';
+import PBSpotifyContext from './pbspotifyContext';
+import PBSpotifyReducer from './pbspotifyReducer';
 import {
     SET_SELECTED_PLAYLIST,
     SET_SPOTIFY_API,
     SET_SPOTIFY_ID,
-    SET_SPOTIFY_SEARCH_RESULTS,
+    SET_SONGLIST,
+    SET_COMPLETED_SEARCH
 } from '../types';
 
-const SpotifyState = props => {
+const PBSpotifyState = props => {
    
     const initialState = {
         Spotify_API: null,
         Spotify_ID: null,
-        SpotifySearchResults: [],
+        SongList: [],
         SelectedPlaylist: {},
+        CompletedSearch: false
     };
     
-    const [state, dispatch] = useReducer(SpotifyReducer, initialState);
+    const [state, dispatch] = useReducer(PBSpotifyReducer, initialState);
     
     // Set Spotify Api & User Info
     const setSpotify_API = (Spotify_API) => {
@@ -47,26 +49,36 @@ const SpotifyState = props => {
         });
     };
 
-    // Save Spotify Search Results
-    const setSpotifySearchResults = (results) => {
+    const setSongList = (songlist) =>{
         dispatch({
-            type: SET_SPOTIFY_SEARCH_RESULTS,
-            payload: results
+          type: SET_SONGLIST,
+          payload: songlist
         });
-    };
+      };
 
-      return <SpotifyContext.Provider
+    const setCompletedSearch = (status) => {
+        dispatch({
+            type: SET_COMPLETED_SEARCH,
+            payload: status
+          });
+
+    }
+
+      return <PBSpotifyContext.Provider
           value={{
               Spotify_API: state.Spotify_API,
               Spotify_ID: state.Spotify_ID,
               SelectedPlaylist: state.SelectedPlaylist,
               SpotifySearchResults: state.SpotifySearchResults,
+              SongList: state.SongList,
+              CompletedSearch: state.CompletedSearch,
               setSpotify_API,
               setSelectedPlaylist,
-              setSpotifySearchResults,
+              setSongList,
+              setCompletedSearch
           }}>
           {props.children}
-      </SpotifyContext.Provider>
+      </PBSpotifyContext.Provider>
   };
   
-  export default SpotifyState;
+  export default PBSpotifyState;

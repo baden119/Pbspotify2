@@ -5,6 +5,8 @@ import AlertTemplate from 'react-alert-template-basic'
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+// Importing the Bootstrap CSS
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 // https://www.npmjs.com/package/react-alert
 const options = {

@@ -1,14 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
-import SpotifyContext from "../../context/spotify/spotifyContext";
+import PBSpotifyContext from "../context/pbspotify/pbspotifyContext";
 
 function PlaylistSelecter() {
-    const spotifyContext = useContext(SpotifyContext);
+    const pbspotifyContext = useContext(PBSpotifyContext);
     
     useEffect(() => {
-        spotifyContext.Spotify_API.getUserPlaylists(spotifyContext.Spotify_ID.id).then(
+        pbspotifyContext.Spotify_API.getUserPlaylists(pbspotifyContext.Spotify_ID.id).then(
             function (data) {
                 setplaylists(data.items);
-                spotifyContext.setSelectedPlaylist(data.items[0])
+                pbspotifyContext.setSelectedPlaylist(data.items[0])
             },
             function (err) {
                 console.error(err);
@@ -24,7 +24,7 @@ function PlaylistSelecter() {
     const onChangeHandler = event => {
         playlists.forEach((playlist) => {
             if(playlist.id === event.target.value){
-                spotifyContext.setSelectedPlaylist(playlist);
+                pbspotifyContext.setSelectedPlaylist(playlist);
 
         }});
       };
