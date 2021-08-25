@@ -7,7 +7,9 @@ import {
     SET_SPOTIFY_API,
     SET_SPOTIFY_ID,
     SET_SONGLIST,
-    SET_COMPLETED_SEARCH
+    SET_COMPLETED_SEARCH,
+    SET_PLAYLIST_TRACKS,
+    SET_LOADING
 } from '../types';
 
 const PBSpotifyState = props => {
@@ -17,7 +19,9 @@ const PBSpotifyState = props => {
         Spotify_ID: null,
         SongList: [],
         SelectedPlaylist: {},
-        CompletedSearch: false
+        PlaylistTracks: [],
+        CompletedSearch: false,
+        Loading: false
     };
     
     const [state, dispatch] = useReducer(PBSpotifyReducer, initialState);
@@ -41,7 +45,7 @@ const PBSpotifyState = props => {
           );
     };
 
-    // Set Selected Spotify Playlist
+    // Set users Spotify playlist for saving songs.
     const setSelectedPlaylist = (playlist) => {
         dispatch({
             type: SET_SELECTED_PLAYLIST,
@@ -49,6 +53,7 @@ const PBSpotifyState = props => {
         });
     };
 
+    // Main Songlist, originates from PBS API, and is modified with Spotify searches.
     const setSongList = (songlist) =>{
         dispatch({
           type: SET_SONGLIST,
@@ -56,12 +61,26 @@ const PBSpotifyState = props => {
         });
       };
 
+    // Control display behaviour related to Spotify searches
     const setCompletedSearch = (status) => {
         dispatch({
             type: SET_COMPLETED_SEARCH,
             payload: status
           });
+    }
 
+    const setPlaylistTracks = (trackList) => {
+        dispatch({
+            type: SET_PLAYLIST_TRACKS,
+            payload: trackList
+          });
+    }
+
+    const setLoading = (status) => {
+        dispatch({
+            type: SET_LOADING,
+            payload: status
+          });
     }
 
       return <PBSpotifyContext.Provider
@@ -72,10 +91,14 @@ const PBSpotifyState = props => {
               SpotifySearchResults: state.SpotifySearchResults,
               SongList: state.SongList,
               CompletedSearch: state.CompletedSearch,
+              PlaylistTracks: state.PlaylistTracks,
+              Loading: state.Loading,
               setSpotify_API,
               setSelectedPlaylist,
               setSongList,
-              setCompletedSearch
+              setPlaylistTracks,
+              setCompletedSearch,
+              setLoading
           }}>
           {props.children}
       </PBSpotifyContext.Provider>

@@ -1,8 +1,9 @@
-import React, { useContext } from 'react'
+import React, { useContext, Fragment } from 'react'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
+import Spinner from 'react-bootstrap/Spinner'
 import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
 import SelectedPlaylist from './SelectedPlaylist';
 
@@ -28,13 +29,13 @@ function TableDisplay() {
     }
     const renderBody = () => {
 
+
         //if songlist but no search results
         if (pbspotifyContext.SongList.length && !pbspotifyContext.CompletedSearch){
             return pbspotifyContext.SongList.map((song)=> {
-                // console.log(new Intl.DateTimeFormat('en-AU').format(new Date(song.pbs_date)));
                 return(
                     <tr key={song.id}>
-                        <td><small>{new Intl.DateTimeFormat('en-AU', {day: 'numeric', month:'numeric', year: '2-digit'}).format(new Date(song.pbs_date))}</small></td>
+                        <td id="dateColumn">{new Intl.DateTimeFormat('en-AU', {day: 'numeric', month:'numeric', year: '2-digit'}).format(new Date(song.pbs_date))}</td>
                         <td>{song.pbs_track} / {song.pbs_artist} </td>
                     </tr>
                 )
@@ -46,17 +47,16 @@ function TableDisplay() {
                 if (song.spotify_match_found){
                     return(
                             <tr key={song.id}>
-                                <td><small>{new Intl.DateTimeFormat('en-AU', {day: 'numeric', month:'numeric', year: '2-digit'}).format(new Date(song.pbs_date))}</small></td>
+                                <td id="dateColumn">{new Intl.DateTimeFormat('en-AU', {day: 'numeric', month:'numeric', year: '2-digit'}).format(new Date(song.pbs_date))}</td>
                                 <td>{song.pbs_track} / {song.pbs_artist}</td>
                                 <td>{song.spotify_track} / {song.spotify_artist}</td>
-                                
                                 <td><button onClick={() => excludeResult(song.id)}>{song.exclude_result ? "Excluded" : "✓"}</button></td>
                             </tr>
                         )
                 }else if (!song.spotify_match_found){
                     return(
                         <tr key={song.id}>
-                            <td><small>{new Intl.DateTimeFormat('en-AU', {day: 'numeric', month:'numeric', year: '2-digit'}).format(new Date(song.pbs_date))}</small></td>
+                            <td id="dateColumn">{new Intl.DateTimeFormat('en-AU', {day: 'numeric', month:'numeric', year: '2-digit'}).format(new Date(song.pbs_date))}</td>
                             <td>{song.pbs_track} {song.pbs_artist}</td>
                             <td>No Results Found</td>
                         </tr>
@@ -80,8 +80,18 @@ function TableDisplay() {
         // console.log(tempSongList[id]);
     };
 
-    return (
-        <Row>
+    if (pbspotifyContext.Loading){
+        return(
+            <Row>
+                <Col className='Centered'>
+                    <Spinner className="searchLoading" animation="grow" />
+                    <h5>Some Loading Text</h5>
+                </Col>
+                {renderPlaylist()}
+            </Row>
+        )
+    }else return (
+        <Row className='TableDisplay'>
             <Col>
                 <Table striped bordered size="sm">
                     <thead>
@@ -93,7 +103,7 @@ function TableDisplay() {
                 </Table>
             </Col>
             {renderPlaylist()}
-        </Row>
+        </Row>  
     )
 }
 

@@ -62,7 +62,6 @@ const Song = (new_id, track, artist, date) => {
 
         try {
             const res = await API.searchTracks((strippedTrack + " " + strippedArtist), { limit: 1 });
-            console.log("Advanced search done")
             if (res.tracks.items[0]) {
                 let spotify_track = res.tracks.items[0].name;
                 let spotify_artist = res.tracks.items[0].artists[0].name;

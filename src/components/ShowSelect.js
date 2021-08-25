@@ -11,7 +11,7 @@ const Showselect = () => {
     const pbspotifyContext = useContext(PBSpotifyContext);
     
     // Set number of episodes to fetch
-    const episodeCount = 2;
+    const episodeCount = 1;
 
     const [selectedShow, setSelectedShow] = useState(JSON.parse(localStorage.getItem('localShowStorage')) || {});
     const [showList, setShowList] = useState([]);

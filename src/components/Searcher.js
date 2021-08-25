@@ -36,60 +36,77 @@ const Searcher = () => {
   const saveSongs = () => {
     let URI_array = [];
 
-    // // Spotify has a limit on how many songs can be added to a playlist with one request.
-    // const API_limit = 99;
+    // Spotify has a limit on how many songs can be added to a playlist with one request.
+    const API_limit = 99;
 
-    // //TODO Clean up, and try to understand this code a bit better
-    // spotifyContext.SpotifySearchResults.forEach((song) => {
-    //   if(song.spotifyResponse){
-    //     URI_array = [...URI_array, song.spotifyResponse.uri]
-    //   }
-    // });
+    //TODO Clean up, and try to understand this code a bit better
+    pbspotifyContext.SongList.forEach((song) => {
+      if(song.spotify_match_found && !song.exclude_result){
+        URI_array = [...URI_array, song.spotify_URI]
+      }
+    });
 
-    // let adjusted_arrays = URI_array.reduce((adjusted, item, index) => {
-    //   const limit_index = Math.floor(index/API_limit)
+    let adjusted_arrays = URI_array.reduce((adjusted, item, index) => {
+      const limit_index = Math.floor(index/API_limit)
 
-    //   if(!adjusted[limit_index]){
-    //     adjusted[limit_index] = [] //Start a new limited array
-    //   }        
+      if(!adjusted[limit_index]){
+        adjusted[limit_index] = [] //Start a new limited array
+      }        
 
-    //     adjusted[limit_index].push(item)
-    //     return adjusted
-    //   }, [])
-    //  console.log(adjusted_arrays)
+      adjusted[limit_index].push(item)
+      return adjusted
+    }, [])
     
-    //  adjusted_arrays.forEach((array) => {
+    adjusted_arrays.map(async(array) => {
+      try {
+        const res = await pbspotifyContext.Spotify_API.addTracksToPlaylist(pbspotifyContext.SelectedPlaylist.id, array);
+        fetchPlaylistTracks();
+        } catch(err) {
+          console.error(err);
+        }
+    })
+    alert.success("Success! Songs saved to Spotify Playlist")
 
-    //      spotifyContext.Spotify_API.addTracksToPlaylist(spotifyContext.SelectedPlaylist.id, array).then(
-    //        function (data) {
-    //          console.log("SaveSongs Result", data)
-    //         },
-    //         function (err) {
-    //           console.error(err);
-    //         },
-    //         )
-    //       })
-    //       alert.success("Success! Songs saved to Spotify Playlist")
-
+    //Duplicated code from SelectedPlaylist Component
+    const fetchPlaylistTracks = async () => {
+      let PlaylistTracks = [];
+        try{
+            const res = await pbspotifyContext.Spotify_API.getPlaylistTracks(pbspotifyContext.SelectedPlaylist.id)
+            res.items.forEach((item, index) => {
+                PlaylistTracks.push({id: index, track: item.track.name, artist: item.track.artists[0].name})
+            })
+            pbspotifyContext.setPlaylistTracks(PlaylistTracks);
+        } catch(err) {
+            console.error(err);
+        }
+    };
   };
 
+  const loadingTest = () => {
+    let tempTest = pbspotifyContext.Loading;
+    tempTest = !tempTest
+    pbspotifyContext.setLoading(tempTest);
+};
 
   const renderSearchButton = () => {
     if (pbspotifyContext.Spotify_API != null){
     return (
       <Fragment>
-        <Button variant="info" size="lg" onClick={() => SpotifySearch()}>Search Spotify for Songs</Button> 
+        <Button variant="primary" size="lg" onClick={() => SpotifySearch()}>Search Spotify for Songs</Button> 
+        <Button variant="info" size="sm" onClick={() => loadingTest()}>Loading Test</Button> 
       </Fragment>
     )
   }
-  else
-    return (
-      <h3>Login with Spotify to Search</h3>
-    )
+  // else
+  //   return (
+  //   //   <Fragment>
+  //   //   <Button variant="secondary" size="lg" disabled >Search Spotify for Songs</Button> 
+  //   // </Fragment>
+  //   )
   };
  
   const renderSaveSongsButton = () => {
-    if(pbspotifyContext.Spotify_API != null && Object.keys(pbspotifyContext.SelectedPlaylist).length !== 0 && pbspotifyContext.SongList.length){
+    if(pbspotifyContext.Spotify_API != null && Object.keys(pbspotifyContext.SelectedPlaylist).length !== 0 && pbspotifyContext.CompletedSearch){
       return(
         <button onClick={ () => saveSongs()}>Save Songs to Playlist</button>
       )
@@ -102,7 +119,7 @@ const Searcher = () => {
 
   return (
     <Row>
-      <Col xs={8}>
+      <Col>
         {renderSearchButton()}
       </Col>
       <Col>

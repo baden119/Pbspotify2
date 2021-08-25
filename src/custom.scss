@@ -1,0 +1,55 @@
+/* make the customizations */
+
+$primary: lightblue;
+$secondary: lightpink;
+$background: lightgrey;
+
+$theme-colors: (
+  'primary': $primary,
+  'secondary': $secondary,
+  // 'success':,
+  'info': tomato,
+  'danger': teal,
+);
+
+$body-bg: $background;
+
+#dateColumn {
+  font-size: smaller;
+  text-align: center;
+  vertical-align: middle;
+}
+
+#show_select_dropdown {
+  background-color: darkgray;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.selectedPlaylist {
+  h5 {
+    text-align: center;
+  }
+  // background-color: $primary;
+  list-style-type: circle;
+  font-size: smaller;
+  // padding-left: 0;
+}
+
+.Centered {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.searchLoading {
+  color: $secondary;
+  width: 80%;
+  height: auto;
+}
+
+// .TableDisplay {
+//   background-color: pink;
+// }
+
+/* import bootstrap to set changes */
+@import 'bootstrap/scss/bootstrap';

@@ -6,7 +6,7 @@ const Login = () => {
   
   return (
       <Fragment>
-          <a href={loginUrl}><Button variant="info" size="lg">Login with Spotify</Button></a>
+          <a href={loginUrl}><Button className="login" size="lg">Login with Spotify</Button></a>
       </Fragment>
   )
 }

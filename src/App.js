@@ -1,5 +1,5 @@
 import React from 'react'; 
-import './App.css';
+import './custom.scss'
 import Container from 'react-bootstrap/Container';
 
 import Showselect from './components/ShowSelect';

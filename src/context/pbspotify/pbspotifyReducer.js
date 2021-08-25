@@ -3,7 +3,9 @@ import {
     SET_SPOTIFY_ID,
     SET_SELECTED_PLAYLIST,
     SET_SONGLIST,
-    SET_COMPLETED_SEARCH
+    SET_COMPLETED_SEARCH,
+    SET_PLAYLIST_TRACKS,
+    SET_LOADING
     } from '../types';
 
     // eslint-disable-next-line
@@ -29,10 +31,20 @@ export default (state, action) => {
                 ...state,
                 SongList: action.payload
                 };
+            case SET_PLAYLIST_TRACKS:
+                return {
+                ...state,
+                PlaylistTracks: action.payload
+                };
             case SET_COMPLETED_SEARCH:
                 return {
                 ...state,
                 CompletedSearch: action.payload
+                };
+            case SET_LOADING:
+                return {
+                ...state,
+                Loading: action.payload
                 };
         default:
             return state;
