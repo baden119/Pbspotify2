@@ -1,5 +1,7 @@
 import React, { useState, useContext } from "react";
 import PBSpotifyContext from "../context/pbspotify/pbspotifyContext";
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 import { useAlert } from 'react-alert'
 
 const PlaylistMaker = () => {
@@ -24,17 +26,19 @@ const PlaylistMaker = () => {
       }
     )};
   return (
-    <div>
-        <input   
-            placeholder="New Playlist Name" 
-            name="playlistName" 
-            value={playlistName} 
-            onChange={onNameChange}
-        />
-        <div>
-          <button onClick={onCreateClick}>Create PlayList</button>
-        </div>  
-    </div>
+    <Form>
+      <Form.Group >
+        <Form.Control 
+        type="text" 
+        placeholder="New Playlist Name" 
+        size="lg" 
+        className="textInput"
+        name="playlistName" 
+        value={playlistName} 
+        onChange={onNameChange}/>
+        <Button onClick={onCreateClick}>Create Empty PlayList</Button>
+      </Form.Group>
+    </Form>
 )
 }
 

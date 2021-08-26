@@ -26,7 +26,7 @@ function SelectedPlaylist() {
 
     
     return (
-        <Col className="selectedPlaylist">
+        <Col className="selectedPlaylist" xs={3}>
             <h5>{pbspotifyContext.SelectedPlaylist.name}</h5>
             <ul>
                 {pbspotifyContext.PlaylistTracks.map((item) =>  (

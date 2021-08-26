@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import Form from 'react-bootstrap/Form'
 import PBSpotifyContext from "../context/pbspotify/pbspotifyContext";
 
 function PlaylistSelecter() {
@@ -30,13 +31,16 @@ function PlaylistSelecter() {
       };
   
       return (
-          <div>
-          <select name="PlaylistSelecter" id="PlaylstSelecer" onChange={onChangeHandler}>
-              {playlists.map((playlist) => (
-                  <option key={playlist.id} value={playlist.id}>{playlist.name}</option>
-              ))}
-          </select>
-          </div>
+          <Form>
+              <Form.Group>
+                <Form.Label>Your Playlists:</Form.Label>
+                <Form.Select name="PlaylistSelecter" id="playlist_select_dropdown" onChange={onChangeHandler}>
+                    {playlists.map((playlist) => (
+                        <option key={playlist.id} value={playlist.id}>{playlist.name}</option>
+                    ))}
+                </Form.Select>
+              </Form.Group>
+          </Form>
       )
   };
 

@@ -14,6 +14,7 @@ const Searcher = () => {
   const SpotifySearch = async () => {
 
     alert.info("Search Started")
+    pbspotifyContext.setLoading(true);
     const resultsList = [];
     await Promise.all(pbspotifyContext.SongList.map(async (song) => {
         const result = await song.searchSpotify(pbspotifyContext.Spotify_API);
@@ -21,8 +22,12 @@ const Searcher = () => {
             const advancedResult = await song.advancedSearchSpotify(pbspotifyContext.Spotify_API);
                 if (advancedResult === false){
                     resultsList.push(song);
+                    pbspotifyContext.setResultCount(resultsList.length)
                 } else resultsList.push(advancedResult);
-        }else resultsList.push(result);
+        }else {
+          resultsList.push(result);
+          pbspotifyContext.setResultCount(resultsList.length)
+        }
     }));
     const sortedList = resultsList.sort(function (a, b) {
         return a.id - b.id;
@@ -30,6 +35,7 @@ const Searcher = () => {
       alert.info("Search Complete.")
     pbspotifyContext.setSongList(sortedList);
     pbspotifyContext.setCompletedSearch(true);
+    pbspotifyContext.setLoading(false);
 };
 
 
@@ -82,39 +88,23 @@ const Searcher = () => {
     };
   };
 
-  const loadingTest = () => {
-    let tempTest = pbspotifyContext.Loading;
-    tempTest = !tempTest
-    pbspotifyContext.setLoading(tempTest);
-};
-
   const renderSearchButton = () => {
     if (pbspotifyContext.Spotify_API != null){
-    return (
-      <Fragment>
-        <Button variant="primary" size="lg" onClick={() => SpotifySearch()}>Search Spotify for Songs</Button> 
-        <Button variant="info" size="sm" onClick={() => loadingTest()}>Loading Test</Button> 
-      </Fragment>
-    )
-  }
-  // else
-  //   return (
-  //   //   <Fragment>
-  //   //   <Button variant="secondary" size="lg" disabled >Search Spotify for Songs</Button> 
-  //   // </Fragment>
-  //   )
+      return (
+          <Button variant="primary" size="lg" onClick={() => SpotifySearch()}>Search Spotify for Songs</Button> 
+      )
+    }
   };
  
   const renderSaveSongsButton = () => {
-    if(pbspotifyContext.Spotify_API != null && Object.keys(pbspotifyContext.SelectedPlaylist).length !== 0 && pbspotifyContext.CompletedSearch){
-      return(
-        <button onClick={ () => saveSongs()}>Save Songs to Playlist</button>
-      )
+    //logged in to render anything
+    if (pbspotifyContext.Spotify_API != null){
+      if(Object.keys(pbspotifyContext.SelectedPlaylist).length !== 0 && pbspotifyContext.CompletedSearch){
+        return(
+          <Button onClick={ () => saveSongs()} size="lg">Save Songs to Playlist</Button>
+        )
+      }
     }
-    else
-      return(
-        <span>Criteria not met yet</span>
-      )
   };
 
   return (

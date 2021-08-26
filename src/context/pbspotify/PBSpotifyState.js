@@ -9,7 +9,8 @@ import {
     SET_SONGLIST,
     SET_COMPLETED_SEARCH,
     SET_PLAYLIST_TRACKS,
-    SET_LOADING
+    SET_LOADING,
+    SET_RESULT_COUNT
 } from '../types';
 
 const PBSpotifyState = props => {
@@ -21,7 +22,8 @@ const PBSpotifyState = props => {
         SelectedPlaylist: {},
         PlaylistTracks: [],
         CompletedSearch: false,
-        Loading: false
+        Loading: false,
+        ResultCount : 0
     };
     
     const [state, dispatch] = useReducer(PBSpotifyReducer, initialState);
@@ -83,22 +85,30 @@ const PBSpotifyState = props => {
           });
     }
 
+    const setResultCount = (count) => {
+        dispatch({
+            type: SET_RESULT_COUNT,
+            payload: count
+          });
+    }
+
       return <PBSpotifyContext.Provider
           value={{
               Spotify_API: state.Spotify_API,
               Spotify_ID: state.Spotify_ID,
               SelectedPlaylist: state.SelectedPlaylist,
-              SpotifySearchResults: state.SpotifySearchResults,
               SongList: state.SongList,
               CompletedSearch: state.CompletedSearch,
               PlaylistTracks: state.PlaylistTracks,
               Loading: state.Loading,
+              ResultCount: state.ResultCount,
               setSpotify_API,
               setSelectedPlaylist,
               setSongList,
               setPlaylistTracks,
               setCompletedSearch,
-              setLoading
+              setLoading,
+              setResultCount
           }}>
           {props.children}
       </PBSpotifyContext.Provider>

@@ -5,7 +5,8 @@ import {
     SET_SONGLIST,
     SET_COMPLETED_SEARCH,
     SET_PLAYLIST_TRACKS,
-    SET_LOADING
+    SET_LOADING,
+    SET_RESULT_COUNT
     } from '../types';
 
     // eslint-disable-next-line
@@ -45,6 +46,11 @@ export default (state, action) => {
                 return {
                 ...state,
                 Loading: action.payload
+                };
+            case SET_RESULT_COUNT:
+                return {
+                ...state,
+                ResultCount: action.payload
                 };
         default:
             return state;

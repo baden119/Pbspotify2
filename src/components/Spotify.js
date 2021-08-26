@@ -1,6 +1,7 @@
 import React, { useEffect, useContext, useState, Fragment } from "react";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
 import Login from './Login';
 import PlaylistMaker from './PlaylistMaker';
 import PlaylistSelecter from './PlaylistSelecter';
@@ -38,10 +39,23 @@ function Spotify() {
     const renderPlaylistSelect = () => {
       if(pbspotifyContext.Spotify_ID){
         return(
-          <select onChange={onChangeHandler}>
-            <option value={'CreateNew'}>Create a New Spotify PlayList</option>
-            <option value={'SelectExisting'}>Select PlayList from your Library</option>
-          </select>
+          <Form>
+            <Form.Check 
+              type="radio"
+              name="playlistSelectRadio"
+              label="Create a new Spotify playlist"
+              value="CreateNew"
+              onChange={onChangeHandler}
+              defaultChecked={true}
+            />
+            <Form.Check 
+              type="radio"
+              name="playlistSelectRadio"
+              label="Add to one of your playlists"
+              value="AddTo"
+              onChange={onChangeHandler}
+            />
+          </Form>
         )
       }
     };
@@ -66,6 +80,8 @@ function Spotify() {
       </Col>
       <Col>
         {renderPlaylistSelect()}
+      </Col>
+      <Col>
         {renderPlaylistComponent()}
       </Col>
     </Row>

@@ -1,4 +1,4 @@
-import React, { useContext, Fragment } from 'react'
+import React, { useContext} from 'react'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table'
@@ -11,88 +11,84 @@ function TableDisplay() {
     
     const pbspotifyContext = useContext(PBSpotifyContext)
 
-    // Render PBS song list and broadcast date
-    const renderPbsData = () => {
+    // Render Header Elements for Table Display
+    const renderHeader = () => {
+        let headerElement = []
+        if (pbspotifyContext.SongList.length){
+            headerElement.push("Date")
+            headerElement.push("Song Info from PBS")
+        }
+        if(pbspotifyContext.CompletedSearch || pbspotifyContext.Loading){
+            headerElement.push("Spotify Search Results")
+            headerElement.push("Include")
+        }
 
-        const renderHeader = () => {
-            let headerElement = []
-            if (pbspotifyContext.SongList.length){
-                headerElement.push("Date")
-                headerElement.push("Song Info from PBS")
-            }
-            return headerElement.map((key, index) => {
-                return <th key={index}>{key}</th>
-            })
-        };
+        return headerElement.map((key, index) => {
+            return <th key={index}>{key}</th>
+        })
+    };
 
-        const renderBody = () => {
+    // Render Table DIsplay Body (Includes Loading Spinner)
+    const renderBody = () => {
+
+        if (pbspotifyContext.SongList.length && !pbspotifyContext.Loading && !pbspotifyContext.CompletedSearch){
             return pbspotifyContext.SongList.map((song)=> {
                 return(
                     <tr key={song.id}>
-                        <td id="dateColumn">{new Intl.DateTimeFormat('en-AU', {day: 'numeric', month:'numeric', year: '2-digit'}).format(new Date(song.pbs_date))}</td>
+                        <td className="dateColumn">{new Intl.DateTimeFormat('en-AU', {day: 'numeric', month:'numeric', year: '2-digit'}).format(new Date(song.pbs_date))}</td>
                         <td>{song.pbs_track} / {song.pbs_artist} </td>
                     </tr>
                 )
             })
-        };    
-        return(
-            <Col>
-            <Table striped bordered size="sm">
-                <thead>
-                    <tr>{renderHeader()}</tr>
-                </thead>
-                <tbody>
-                    {renderBody()}
-                </tbody>
-            </Table>
-            </Col>
-        )
-    };
-    // render spotify search results and exclude button
-    const renderSpotifyData = () => {
-        const renderHeader = () => {
-            let headerElement = []
-            if(pbspotifyContext.CompletedSearch === true){
-                headerElement.push("Spotify Search Results")
-                headerElement.push("Include")
-            }
-    
-            return headerElement.map((key, index) => {
-                return <th key={index}>{key}</th>
+        } else if (pbspotifyContext.SongList.length && pbspotifyContext.Loading){
+            return pbspotifyContext.SongList.map((song, index)=> {
+                if (index === 0){
+                    return (
+                        <tr key={song.id}>
+                            <td className="dateColumn">{new Intl.DateTimeFormat('en-AU', {day: 'numeric', month:'numeric', year: '2-digit'}).format(new Date(song.pbs_date))}</td>
+                            <td>{song.pbs_track} / {song.pbs_artist} </td>
+                            <td colSpan="2" rowSpan="0" className="bigSpan Centered">
+                                    <h5>Searching...</h5>
+                                    <div id="loadingContainer"> 
+                                        <Spinner id="searchLoading" animation="grow" />
+                                    </div>
+                                    <h6>Results Returned</h6>
+                                    <h3>{pbspotifyContext.ResultCount} / {pbspotifyContext.SongList.length}</h3>
+
+                            </td>
+                        </tr>
+                    )              
+                } else {
+                    return (
+                    <tr key={song.id}>
+                        <td className="dateColumn">{new Intl.DateTimeFormat('en-AU', {day: 'numeric', month:'numeric', year: '2-digit'}).format(new Date(song.pbs_date))}</td>
+                        <td>{song.pbs_track} / {song.pbs_artist} </td>
+                    </tr>
+                    )
+                }
             })
+        } else if (pbspotifyContext.SongList.length && pbspotifyContext.CompletedSearch){
+            return pbspotifyContext.SongList.map((song) => {
+                if (song.spotify_match_found){
+                    return(
+                        <tr key={song.id}>
+                            <td className="dateColumn">{new Intl.DateTimeFormat('en-AU', {day: 'numeric', month:'numeric', year: '2-digit'}).format(new Date(song.pbs_date))}</td>
+                            <td>{song.pbs_track} / {song.pbs_artist} </td>
+                            <td><div>{song.spotify_track} / {song.spotify_artist}</div></td>
+                            <td><button onClick={() => excludeResult(song.id)}>{song.exclude_result ? "Excluded" : "✓"}</button></td>
+                        </tr>
+                    )
+                }else if (!song.spotify_match_found){
+                    return(
+                        <tr key={song.id}>
+                            <td className="dateColumn">{new Intl.DateTimeFormat('en-AU', {day: 'numeric', month:'numeric', year: '2-digit'}).format(new Date(song.pbs_date))}</td>
+                            <td>{song.pbs_track} / {song.pbs_artist} </td>
+                            <td>No Results Found</td>
+                        </tr>
+                    )
+                }
+            }); 
         };
-        const renderBody = () => {
-            if (pbspotifyContext.SongList.length && pbspotifyContext.CompletedSearch){
-                return pbspotifyContext.SongList.map((song) => {
-                    if (song.spotify_match_found){
-                        return(
-                            <tr key={song.id}>
-                                <td><div>{song.spotify_track} / {song.spotify_artist}</div></td>
-                                <td><button onClick={() => excludeResult(song.id)}>{song.exclude_result ? "Excluded" : "✓"}</button></td>
-                            </tr>
-                        )
-                    }else if (!song.spotify_match_found){
-                        return(
-                            <tr key={song.id}>
-                                <td>No Results Found</td>
-                            </tr>
-                        )
-                    }
-                }); 
-            };
-        };
-        return(
-            <Col>
-            <Table className="spotifyTable" striped bordered size="sm">
-                <thead>
-                    <tr>{renderHeader()}</tr>
-                </thead>
-                <tbody>
-                    {renderBody()}
-                </tbody>
-            </Table>
-            </Col>
-        )
     };
     
     const renderPlaylist = () => {
@@ -106,38 +102,12 @@ function TableDisplay() {
         let tempSongList = pbspotifyContext.SongList;
         tempSongList[id].exclude_result = !tempSongList[id].exclude_result;
         pbspotifyContext.setSongList(tempSongList);
-        // console.log(tempSongList[id]);
     };
 
-    if (pbspotifyContext.Loading){
-        return(
-            <Row>
-                <Col className='Centered'>
-                    <Spinner className="searchLoading" animation="grow" />
-                    <h5>Some Loading Text</h5>
-                </Col>
-                {renderPlaylist()}
-            </Row>
-        )
-    }else return (
+     return (
         <Row className='TableDisplay'>
-            {/* Render Header */}
-            {/* Conditional statemet - Show Selected? - Search Completed? */}
-            {/* Create headerElement list */}
-            {/* return headerElement.map((key, index) => {
-                return <th key={index}>{key}</th>
-            } */}
 
-            {/* Render Body */}
-            {/* Conditional Statement - Same as above */}
-
-            {/* The issue is, is it possible to have 4x Header Elements Columns, 2x table body element Columns and 2x
-                Loading bar elements.  */}
-            {/* Like maybe put the 2nd two Columns in a wrapper so display a loading animation. */}
-
-
-
-        {/* <Col>
+        <Col>
             <Table striped bordered size="sm">
                 <thead>
                     <tr>{renderHeader()}</tr>
@@ -146,24 +116,7 @@ function TableDisplay() {
                     {renderBody()}
                 </tbody>
             </Table>
-        </Col> */}
-
-
-            {/* render pbs showlist & date */}
-            {renderPbsData()}
-            {/* render spotify results & exclude button */}
-            {renderSpotifyData()}
-            {/* <Col>
-                <Table striped bordered size="sm">
-                    <thead>
-                        <tr>{renderHeader()}</tr>
-                    </thead>
-                    <tbody>
-                        {renderBody()}
-                    </tbody>
-                </Table>
-            </Col> */}
-            {/* leave render playlist as is, already returns a col */}
+        </Col>
             {renderPlaylist()}
         </Row>  
     )

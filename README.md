@@ -4,10 +4,11 @@
 
 - address 429 Errors
 
-Display Control Challenges
+Little improvements
 
-- Loading Spinner
-- Playlist Select Dropdown behaviour
+- Playlist maker/select behaviour
+  -Change to chosen select once playlist created
+  -Dont deselect playlist when merely switching options
 
 Theme and Colours
 
@@ -31,6 +32,8 @@ Later On
 
 DONE!
 
+- Playlist Select Dropdown behaviour
+- Loading Spinner
 - get rid of pbsContext, consolidate into single context.
 - SelectedPlaylist refresh after playlist creation
 - Implement class for songs, regain existing functionality
