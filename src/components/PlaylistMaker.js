@@ -12,19 +12,20 @@ const PlaylistMaker = () => {
   const alert = useAlert()
   const onNameChange = e => setPlaylistName(e.target.value)
   
-  const onCreateClick = () =>{
-    pbspotifyContext.Spotify_API.createPlaylist(pbspotifyContext.Spotify_ID.id, {name: playlistName, public: false, description: "Created by PBSpotify."}).then(
-      function (data) {
-        pbspotifyContext.setSelectedPlaylist(data);
-        alert.success(data.name + ' Playlist Created!')
-        setPlaylistName('');
-
-      },
-      function (err) {
+  const onCreateClick = async () =>{
+    try{
+      const res = await pbspotifyContext.Spotify_API.createPlaylist(pbspotifyContext.Spotify_ID.id, {name: playlistName, public: false, description: "Created by PBSpotify."})
+      console.log(res);
+      pbspotifyContext.setSelectedPlaylist(res);
+      alert.success(res.name + ' Playlist Created!')
+      setPlaylistName('');
+      pbspotifyContext.setCreateNewPlaylist(false)
+    }catch (err) {
         alert.error("Error: Playlist needs a name");
         console.error(err);
       }
-    )};
+  };
+
   return (
     <Form>
       <Form.Group >
@@ -36,7 +37,7 @@ const PlaylistMaker = () => {
         name="playlistName" 
         value={playlistName} 
         onChange={onNameChange}/>
-        <Button onClick={onCreateClick}>Create Empty PlayList</Button>
+        <Button onClick={onCreateClick}>Create PlayList</Button>
       </Form.Group>
     </Form>
 )

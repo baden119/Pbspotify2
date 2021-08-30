@@ -30,7 +30,8 @@ function TableDisplay() {
 
     // Render Table DIsplay Body (Includes Loading Spinner)
     const renderBody = () => {
-
+        
+        // Initial state, PBS songlist but no search
         if (pbspotifyContext.SongList.length && !pbspotifyContext.Loading && !pbspotifyContext.CompletedSearch){
             return pbspotifyContext.SongList.map((song)=> {
                 return(
@@ -40,6 +41,7 @@ function TableDisplay() {
                     </tr>
                 )
             })
+        // Condition to display loading spinner while searching.
         } else if (pbspotifyContext.SongList.length && pbspotifyContext.Loading){
             return pbspotifyContext.SongList.map((song, index)=> {
                 if (index === 0){
@@ -67,6 +69,7 @@ function TableDisplay() {
                     )
                 }
             })
+        // Condition for completed search. Renders search results or lack thereof.  
         } else if (pbspotifyContext.SongList.length && pbspotifyContext.CompletedSearch){
             return pbspotifyContext.SongList.map((song) => {
                 if (song.spotify_match_found){

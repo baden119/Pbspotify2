@@ -1,7 +1,8 @@
-import React, { useEffect, useContext, useState, Fragment } from "react";
+import React, { useEffect, useContext, Fragment } from "react";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button'
 import Login from './Login';
 import PlaylistMaker from './PlaylistMaker';
 import PlaylistSelecter from './PlaylistSelecter';
@@ -14,7 +15,6 @@ const spotify_api = new SpotifyWebApi();
 function Spotify() {
 
   const pbspotifyContext = useContext(PBSpotifyContext);
-  const [PlaylistOption, setPlaylistOption] = useState('CreateNew');
 
   // Taken from:
   // https://github.com/atharvadeosthale/spotify-clone/blob/master/src/App.js
@@ -32,8 +32,8 @@ function Spotify() {
 
 
     const onChangeHandler = event => {
-      pbspotifyContext.setSelectedPlaylist({});
-      setPlaylistOption(event.target.value);
+      // pbspotifyContext.setSelectedPlaylist({});
+      pbspotifyContext.setCreateNewPlaylist(JSON.parse(event.target.value));
     };
 
     const renderPlaylistSelect = () => {
@@ -44,35 +44,36 @@ function Spotify() {
               type="radio"
               name="playlistSelectRadio"
               label="Create a new Spotify playlist"
-              value="CreateNew"
+              value={true}
               onChange={onChangeHandler}
-              defaultChecked={true}
+              checked={pbspotifyContext.CreateNewPlaylist}
             />
             <Form.Check 
               type="radio"
               name="playlistSelectRadio"
               label="Add to one of your playlists"
-              value="AddTo"
+              value={false}
               onChange={onChangeHandler}
+              checked={!pbspotifyContext.CreateNewPlaylist}
             />
           </Form>
         )
       }
     };
 
-    const renderPlaylistComponent = () => {
-      if (pbspotifyContext.Spotify_ID){
-        if (PlaylistOption === 'CreateNew'){
-          return(
-            <PlaylistMaker />
-          )}
-        else{
-          return(
-            <PlaylistSelecter />
-          )}
-      }
+  const renderPlaylistComponent = () => {
+    if (pbspotifyContext.Spotify_ID){
+      if (pbspotifyContext.CreateNewPlaylist){
+        return(
+          <PlaylistMaker />
+        )}
+      else{
+        return(
+          <PlaylistSelecter />
+        )}
     }
-  
+  }
+
   return (
     <Row>
       <Col>

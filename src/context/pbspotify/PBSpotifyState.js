@@ -10,7 +10,8 @@ import {
     SET_COMPLETED_SEARCH,
     SET_PLAYLIST_TRACKS,
     SET_LOADING,
-    SET_RESULT_COUNT
+    SET_RESULT_COUNT,
+    SET_CREATE_NEW_PLAYLIST
 } from '../types';
 
 const PBSpotifyState = props => {
@@ -23,7 +24,8 @@ const PBSpotifyState = props => {
         PlaylistTracks: [],
         CompletedSearch: false,
         Loading: false,
-        ResultCount : 0
+        ResultCount : 0,
+        CreateNewPlaylist: true 
     };
     
     const [state, dispatch] = useReducer(PBSpotifyReducer, initialState);
@@ -92,6 +94,13 @@ const PBSpotifyState = props => {
           });
     }
 
+    const setCreateNewPlaylist = (bool) => {
+        dispatch({
+            type: SET_CREATE_NEW_PLAYLIST,
+            payload: bool
+          });
+    }
+
       return <PBSpotifyContext.Provider
           value={{
               Spotify_API: state.Spotify_API,
@@ -102,13 +111,15 @@ const PBSpotifyState = props => {
               PlaylistTracks: state.PlaylistTracks,
               Loading: state.Loading,
               ResultCount: state.ResultCount,
+              CreateNewPlaylist: state.CreateNewPlaylist,
               setSpotify_API,
               setSelectedPlaylist,
               setSongList,
               setPlaylistTracks,
               setCompletedSearch,
               setLoading,
-              setResultCount
+              setResultCount,
+              setCreateNewPlaylist
           }}>
           {props.children}
       </PBSpotifyContext.Provider>

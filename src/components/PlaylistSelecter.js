@@ -9,7 +9,10 @@ function PlaylistSelecter() {
         pbspotifyContext.Spotify_API.getUserPlaylists(pbspotifyContext.Spotify_ID.id).then(
             function (data) {
                 setplaylists(data.items);
-                pbspotifyContext.setSelectedPlaylist(data.items[0])
+                
+                if (Object.keys(pbspotifyContext.SelectedPlaylist).length === 0){
+                    pbspotifyContext.setSelectedPlaylist(data.items[0])
+                }
             },
             function (err) {
                 console.error(err);
@@ -23,6 +26,7 @@ function PlaylistSelecter() {
   
     // Once a playlist is selected, it is saved into context.
     const onChangeHandler = event => {
+        console.log(event);
         playlists.forEach((playlist) => {
             if(playlist.id === event.target.value){
                 pbspotifyContext.setSelectedPlaylist(playlist);
@@ -33,8 +37,7 @@ function PlaylistSelecter() {
       return (
           <Form>
               <Form.Group>
-                <Form.Label>Your Playlists:</Form.Label>
-                <Form.Select name="PlaylistSelecter" id="playlist_select_dropdown" onChange={onChangeHandler}>
+                <Form.Select name="PlaylistSelecter" id="playlist_select_dropdown" onChange={onChangeHandler} value={pbspotifyContext.SelectedPlaylist.id}>
                     {playlists.map((playlist) => (
                         <option key={playlist.id} value={playlist.id}>{playlist.name}</option>
                     ))}
@@ -43,5 +46,6 @@ function PlaylistSelecter() {
           </Form>
       )
   };
+
 
 export default PlaylistSelecter
