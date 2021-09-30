@@ -92,7 +92,7 @@ function Spotify() {
     pbspotifyContext.setLoading(false);
     pbspotifyContext.setResultCount(0);
     pbspotifyContext.setCreateNewPlaylist(true);
-    window.location.replace('http://localhost:3000');
+    window.location.replace('https://pbspotify.netlify.app');
   }
 
   const renderLoginButtons = () => {
