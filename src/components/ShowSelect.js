@@ -47,15 +47,11 @@ const Showselect = () => {
         }catch(e) {
             console.error('PBS Show List Query', e);
         }
-        // const sortedShowList = ShowList.sort(function (a, b) {
-        //     return b.url - a.url;
-        //   });
 
+        // normal sort wasnt working for some reason.
+        // code from:
+        // https://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value 
         ShowList.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
-        
-        // sortedShowList.forEach(show => {
-        //     console.log(typeof(show.name));
-        // })
         
         setShowList(ShowList)
     };
