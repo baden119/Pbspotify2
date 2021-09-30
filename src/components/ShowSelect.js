@@ -37,20 +37,27 @@ const Showselect = () => {
         try{
             const res = await axios.get('https://airnet.org.au/rest/stations/3pbs/programs');
             res.data.forEach((program, index) => {
-                // Issue with API data, some show items lack a unique URL, this ignores such items.
-                if(program.programRestUrl !== "https://airnet.org.au/rest/stations/3pbs/programs/"){
-                    //Create ShowList
-                    ShowList = [...ShowList, {
-                        id: index,
-                        name: program.name, 
-                        url: program.programRestUrl
-                    }];
-                };
-            setShowList(ShowList)
+                ShowList = [...ShowList, {
+                    id: index,
+                    name: program.name, 
+                    url: program.programRestUrl,
+                    description: program.gridDescription
+                }];
             });
         }catch(e) {
             console.error('PBS Show List Query', e);
         }
+        // const sortedShowList = ShowList.sort(function (a, b) {
+        //     return b.url - a.url;
+        //   });
+
+        ShowList.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
+        
+        // sortedShowList.forEach(show => {
+        //     console.log(typeof(show.name));
+        // })
+        
+        setShowList(ShowList)
     };
 
     // Get Song list for selected show, called by useEffect on show selection.
@@ -136,7 +143,7 @@ const Showselect = () => {
                     <Form.Select name="selected show" id="show_select_dropdown" value ={selectedShow.id} onChange={e => showSelectionHandler(e)}>
                         {showList.map((show) => {
                             return (
-                                <option key={show.id} value={show.id} >{show.name}</option>
+                                <option key={show.id + show.name} value={show.id} >{show.name}</option>
                             )
                         })};
                     </Form.Select>

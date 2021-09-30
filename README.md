@@ -1,29 +1,25 @@
 # TODOs
 
--Class Implementation
+ERRORS
 
 - address 429 Errors
-
-Theme and Colours
-
-- Logged in info display
-- logout / reset button
-- Checklist for completed tasks
 
 Before Next Deploy
 
 - Fix credentials problem (production vs dev)
+- need to change to netlify url (reset)
 
 Later On
 
-- useEffect, learn about those dependency errors that keep coming up.
-- Vairable number of episodes searched
-- clean up saveSongs code in searcher.js. pretty much brought straight from stackoverflow.
 - app name/title navbar/ bottom navbar
 - about page, donations link
+- Checklist for completed tasks
+- Vairable number of episodes searched
 
 DONE!
 
+- Logged in info display
+- logout / reset button
 - Style all buttons
 - Individually colour table rows by search result / include-exclude
 - Playlist maker/select behaviour
