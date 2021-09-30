@@ -1,17 +1,20 @@
 import React, { useEffect, useContext, useState } from 'react'
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form'
 import axios from 'axios';
-import PbsContext from '../../context/pbs/pbsContext';
-import SpotifyContext from '../../context/spotify/spotifyContext';
+import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
+import Song from './Song';
 
 const Showselect = () => {
 
-    const pbsContext = useContext(PbsContext);
-    const spotifyContext = useContext(SpotifyContext);
+    const pbspotifyContext = useContext(PBSpotifyContext);
     
     // Set number of episodes to fetch
     const episodeCount = 3;
 
     const [selectedShow, setSelectedShow] = useState(JSON.parse(localStorage.getItem('localShowStorage')) || {});
+    // const [selectedShow, setSelectedShow] = useState({})
     const [showList, setShowList] = useState([]);
 
   
@@ -22,7 +25,7 @@ const Showselect = () => {
 
     useEffect(() => {
         getSongList();
-        spotifyContext.setSpotifySearchResults([])
+        pbspotifyContext.setSongList([])
         localStorage.setItem('localShowStorage', JSON.stringify(selectedShow));
         // eslint-disable-next-line
         }, [selectedShow]);
@@ -34,20 +37,23 @@ const Showselect = () => {
         try{
             const res = await axios.get('https://airnet.org.au/rest/stations/3pbs/programs');
             res.data.forEach((program, index) => {
-                // Issue with API data, some show items lack a unique URL, this ignores such items.
-                if(program.programRestUrl !== "https://airnet.org.au/rest/stations/3pbs/programs/"){
-                    //Create ShowList
-                    ShowList = [...ShowList, {
-                        id: index,
-                        name: program.name, 
-                        url: program.programRestUrl
-                    }];
-                };
-            setShowList(ShowList)
+                ShowList = [...ShowList, {
+                    id: index,
+                    name: program.name, 
+                    url: program.programRestUrl,
+                    description: program.gridDescription
+                }];
             });
         }catch(e) {
             console.error('PBS Show List Query', e);
         }
+
+        // normal sort wasnt working for some reason.
+        // code from:
+        // https://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value 
+        ShowList.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
+        
+        setShowList(ShowList)
     };
 
     // Get Song list for selected show, called by useEffect on show selection.
@@ -88,28 +94,31 @@ const Showselect = () => {
         const runAsyncFunctions = async () => {
             if (selectedShow.url != null){
 
+                let idcount = 0
                 const episodes = await getEpisodeList()
                 const songList = await Promise.all(
                     episodes.map(async (episode) => {
-                        let episodeSongList = [];
+                        const songList = [];
                         const episodedata = await getEpisodeData(episode)
-                            episodedata.forEach((song, index) => {
-                                episodeSongList = [...episodeSongList, {
-                                    id: song.id,
-                                    track: song.track, 
-                                    artist: song.artist,
-                                    date: episode.start,
-                                    index: index
-                                }]
+                            episodedata.forEach((item) => {
+                                const song = Song(
+                                    idcount, 
+                                    item.track, 
+                                    item.artist, 
+                                    episode.start
+                                );
+                                idcount += 1;
+                                songList.push(song);
                             })
-                        return episodeSongList
+                        return songList
                     })
                 )
-                pbsContext.setSongList(songList.flat());
+                // flat() concaternates the seperate episode arrays down into a single array.
+                pbspotifyContext.setSongList(songList.flat());
+                pbspotifyContext.setCompletedSearch(false);
             };
+        };
         
-        }
-    
     runAsyncFunctions();
 };
 
@@ -125,29 +134,20 @@ const Showselect = () => {
     };
 
     return (
-        <div style={showSelectStyle}>
-            <select name="selected show" id="show_select_dropdown" value ={selectedShow.id} onChange={e => showSelectionHandler(e)}>
-                {showList.map((show) => {
-                    return (
-                        show.id === selectedShow.id ?
-                        <option key={show.id} value={show.id} >{show.name}</option>
-                        :
-                        <option key={show.id} value={show.id} >{show.name}</option>
-                    )
-                })};
-            </select>
-        </div>
+            <Row>
+                <Col>
+                    <Form.Select name="selected show" id="show_select_dropdown" value ={selectedShow.id} onChange={e => showSelectionHandler(e)}>
+                        {showList.map((show) => {
+                            return (
+                                <option key={show.id + show.name} value={show.id} >{show.name}</option>
+                            )
+                        })};
+                    </Form.Select>
+                </Col>
+            </Row>
     )
 }
 
-const showSelectStyle = {
-    display: 'grid',
-    // backgroundColor: 'yellow',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center'
-};
 
 export default Showselect
 

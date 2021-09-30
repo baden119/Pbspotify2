@@ -1,0 +1,85 @@
+/* make the customizations */
+
+$primary: #add8e6;
+$secondary: lightpink;
+$included: lightgreen;
+$background: lightgrey;
+
+$theme-colors: (
+  'primary': $primary,
+  'secondary': $secondary,
+  'success': $included,
+  'info': tomato,
+  'danger': teal,
+);
+
+$body-bg: $background;
+
+.dateColumn {
+  font-size: smaller;
+  text-align: center;
+  // vertical-align: middle;
+}
+
+#show_select_dropdown {
+  background-color: darkgray;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+#playlist_select_dropdown {
+  background-color: $included;
+}
+
+.textInput {
+  background-color: $secondary !important;
+}
+
+.selectedPlaylist {
+  // text-align: center;
+  list-style-type: circle;
+  font-size: smaller;
+  // padding-left: 0;
+}
+
+.Centered {
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+
+#loadingContainer {
+  width: 50%;
+  margin: auto;
+}
+#searchLoading {
+  color: $primary;
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+  border: 2px solid;
+  border-color: rgb(57, 28, 189);
+}
+
+.bigSpan {
+  width: 50%;
+}
+
+.includedSong {
+  background-color: $included !important;
+}
+.excludedSong {
+  background-color: $secondary !important;
+}
+
+#loggedInDisplay {
+  text-align: center;
+  background-color: $included !important;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+/* import bootstrap to set changes */
+@import 'bootstrap/scss/bootstrap';
