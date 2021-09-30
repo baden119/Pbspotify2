@@ -14,6 +14,7 @@ const Showselect = () => {
     const episodeCount = 3;
 
     const [selectedShow, setSelectedShow] = useState(JSON.parse(localStorage.getItem('localShowStorage')) || {});
+    // const [selectedShow, setSelectedShow] = useState({})
     const [showList, setShowList] = useState([]);
 
   
@@ -135,14 +136,10 @@ const Showselect = () => {
                     <Form.Select name="selected show" id="show_select_dropdown" value ={selectedShow.id} onChange={e => showSelectionHandler(e)}>
                         {showList.map((show) => {
                             return (
-                                show.id === selectedShow.id ?
-                                <option key={show.id} value={show.id} >{show.name}</option>
-                                :
                                 <option key={show.id} value={show.id} >{show.name}</option>
                             )
                         })};
                     </Form.Select>
-                
                 </Col>
             </Row>
     )

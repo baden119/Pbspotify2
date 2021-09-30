@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, Fragment } from "react";
+import React, { useEffect, useContext} from "react";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -74,10 +74,37 @@ function Spotify() {
     }
   }
 
+  const Reset = () => {
+    console.log("Reset");
+    // localStorage.setItem('localShowStorage', {});
+    localStorage.clear();
+    pbspotifyContext.setSpotify_API(null);
+    pbspotifyContext.setSelectedPlaylist({});
+    pbspotifyContext.setSongList([]);
+    pbspotifyContext.setPlaylistTracks([]);
+    pbspotifyContext.setCompletedSearch(false);
+    pbspotifyContext.setLoading(false);
+    pbspotifyContext.setResultCount(0);
+    pbspotifyContext.setCreateNewPlaylist(true);
+    window.location.reload();
+  }
+
+  const renderLoginButtons = () => {
+    if (pbspotifyContext.Spotify_ID){
+      return (
+        <div>
+          <Button variant="primary" size="sm" onClick={ () => Reset()}>Logout / Reset</Button>
+          <div id="loggedInDisplay">Logged in as <b>{pbspotifyContext.Spotify_ID.display_name}</b></div>
+        </div>  
+      )
+    }else return (<Login />)
+
+  }
+
   return (
     <Row>
       <Col>
-        {pbspotifyContext.Spotify_ID ? <Fragment>Logged in as <b>{pbspotifyContext.Spotify_ID.display_name}</b></Fragment> : <Login />}
+        {renderLoginButtons()}
       </Col>
       <Col>
         {renderPlaylistSelect()}

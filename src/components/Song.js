@@ -28,9 +28,14 @@ const Song = (new_id, track, artist, date) => {
                     searchSpotify,
                     advancedSearchSpotify
                 }
-            } else { return false }
+            } else if(res.status_code === 429){
+                console.log("429 ERROR CAUGHT!!");
+                console.log((res.headers["Retry-After"]));
+                return("error")
+            }else { return false }
         } catch (e) {
             console.error(e);
+            return("error")
         }
     }
 
@@ -81,9 +86,14 @@ const Song = (new_id, track, artist, date) => {
                     searchSpotify,
                     advancedSearchSpotify
                 }
-            } else { return false }
+            } else if(res.status_code === 429){
+                console.log("429 ERROR CAUGHT!!");
+                console.log((res.headers["Retry-After"]));
+                return("error")
+            }else { return false }
         } catch (e) {
             console.error(e);
+            return("error")
         }
     }
 

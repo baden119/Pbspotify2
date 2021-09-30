@@ -1,28 +1,24 @@
 /* make the customizations */
 
-$primary: lightblue;
+$primary: #add8e6;
 $secondary: lightpink;
+$included: lightgreen;
 $background: lightgrey;
 
 $theme-colors: (
   'primary': $primary,
   'secondary': $secondary,
-  // 'success':,
+  'success': $included,
   'info': tomato,
   'danger': teal,
 );
 
 $body-bg: $background;
 
-input,
-textarea {
-  background-color: $primary;
-}
-
 .dateColumn {
   font-size: smaller;
   text-align: center;
-  vertical-align: middle;
+  // vertical-align: middle;
 }
 
 #show_select_dropdown {
@@ -32,16 +28,15 @@ textarea {
 }
 
 #playlist_select_dropdown {
-  background-color: $primary;
+  background-color: $included;
 }
 
 .textInput {
   background-color: $secondary !important;
-  color: antiquewhite;
 }
 
 .selectedPlaylist {
-  text-align: center;
+  // text-align: center;
   list-style-type: circle;
   font-size: smaller;
   // padding-left: 0;
@@ -58,30 +53,33 @@ textarea {
   margin: auto;
 }
 #searchLoading {
-  color: rgb(52, 99, 230);
+  color: $primary;
   width: 100%;
   height: 0;
   padding-bottom: 100%;
+  border: 2px solid;
+  border-color: rgb(57, 28, 189);
 }
 
 .bigSpan {
-  background-color: darkorchid;
   width: 50%;
 }
-.spotifyTable {
-  td {
-    div {
-      // height: 10px;
-      overflow: hidden;
-      // background-color: #f8f8f8ad
-    }
-  }
-  // overflow-x: scroll;
-}
-// .TableDisplay {
-//   td {
-//   }
-// }
 
+.includedSong {
+  background-color: $included !important;
+}
+.excludedSong {
+  background-color: $secondary !important;
+}
+
+#loggedInDisplay {
+  text-align: center;
+  background-color: $included !important;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 400;
+  line-height: 1.5;
+}
 /* import bootstrap to set changes */
 @import 'bootstrap/scss/bootstrap';

@@ -1,9 +1,10 @@
-import React, {useContext, Fragment} from 'react'
+import React, {useContext} from 'react'
 import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import PBSpotifyContext from "../context/pbspotify/pbspotifyContext";
 import { useAlert } from 'react-alert'
+import TodoList from './TodoList';
 
 const Searcher = () => {
 
@@ -13,7 +14,6 @@ const Searcher = () => {
   
   const SpotifySearch = async () => {
 
-    alert.info("Search Started")
     pbspotifyContext.setLoading(true);
     const resultsList = [];
     await Promise.all(pbspotifyContext.SongList.map(async (song) => {
@@ -23,8 +23,14 @@ const Searcher = () => {
                 if (advancedResult === false){
                     resultsList.push(song);
                     pbspotifyContext.setResultCount(resultsList.length)
-                } else resultsList.push(advancedResult);
-        }else {
+                } else if (result === "error"){
+                  alert.error("Error: Search Again")
+                  resultsList.push(song);
+                }else resultsList.push(advancedResult);
+        }else if (result === "error"){
+          alert.error("Error: Search Again")
+          resultsList.push(song);
+        }else{
           resultsList.push(result);
           pbspotifyContext.setResultCount(resultsList.length)
         }
@@ -36,6 +42,7 @@ const Searcher = () => {
     pbspotifyContext.setSongList(sortedList);
     pbspotifyContext.setCompletedSearch(true);
     pbspotifyContext.setLoading(false);
+    pbspotifyContext.setResultCount(0)
 };
 
 
@@ -65,7 +72,7 @@ const Searcher = () => {
     
     adjusted_arrays.map(async(array) => {
       try {
-        const res = await pbspotifyContext.Spotify_API.addTracksToPlaylist(pbspotifyContext.SelectedPlaylist.id, array);
+        await pbspotifyContext.Spotify_API.addTracksToPlaylist(pbspotifyContext.SelectedPlaylist.id, array);
         fetchPlaylistTracks();
         } catch(err) {
           console.error(err);
@@ -89,9 +96,9 @@ const Searcher = () => {
   };
 
   const renderSearchButton = () => {
-    if (pbspotifyContext.Spotify_API != null){
+    if (pbspotifyContext.Spotify_API != null && Object.keys(pbspotifyContext.SongList).length !== 0){
       return (
-          <Button variant="primary" size="lg" onClick={() => SpotifySearch()}>Search Spotify for Songs</Button> 
+          <Button variant={pbspotifyContext.CompletedSearch ? "success" : "primary"} size="lg" onClick={() => SpotifySearch()}>Search Spotify for Songs</Button> 
       )
     }
   };
@@ -111,6 +118,9 @@ const Searcher = () => {
     <Row>
       <Col>
         {renderSearchButton()}
+      </Col>
+      <Col>
+        <TodoList />
       </Col>
       <Col>
         {renderSaveSongsButton()}

@@ -36,17 +36,19 @@ const PBSpotifyState = props => {
             type: SET_SPOTIFY_API,
             payload: Spotify_API
         });
-        Spotify_API.getMe().then(
-            function (data) {
-                dispatch({
-                    type: SET_SPOTIFY_ID,
-                    payload: data
-                });
-            },
-            function (err) {
-              console.error(err);
-            }
-          );
+        if (Spotify_API){
+            Spotify_API.getMe().then(
+                function (data) {
+                    dispatch({
+                        type: SET_SPOTIFY_ID,
+                        payload: data
+                    });
+                },
+                function (err) {
+                  console.error(err);
+                }
+              );
+        }
     };
 
     // Set users Spotify playlist for saving songs.

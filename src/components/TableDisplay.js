@@ -77,11 +77,14 @@ function TableDisplay() {
                         <tr key={song.id}>
                             <td className="dateColumn">{new Intl.DateTimeFormat('en-AU', {day: 'numeric', month:'numeric', year: '2-digit'}).format(new Date(song.pbs_date))}</td>
                             <td>{song.pbs_track} / {song.pbs_artist} </td>
-                            <td><div>{song.spotify_track} / {song.spotify_artist}</div></td>
-                            <td><button onClick={() => excludeResult(song.id)}>{song.exclude_result ? "Excluded" : "✓"}</button></td>
+
+                            <td>{song.exclude_result ? <Button onClick={() => excludeResult(song.id)} className="excludedSong">{song.spotify_track} / {song.spotify_artist}</Button>
+                                : <Button onClick={() => excludeResult(song.id)} className="includedSong">{song.spotify_track} / {song.spotify_artist}</Button>}</td>
+                            <td className="Centered">{song.exclude_result ? <Button onClick={() => excludeResult(song.id)} className="excludedSong">✕</Button>
+                                : <Button onClick={() => excludeResult(song.id)} className="includedSong">✔</Button>}</td>
                         </tr>
                     )
-                }else if (!song.spotify_match_found){
+                }else{
                     return(
                         <tr key={song.id}>
                             <td className="dateColumn">{new Intl.DateTimeFormat('en-AU', {day: 'numeric', month:'numeric', year: '2-digit'}).format(new Date(song.pbs_date))}</td>

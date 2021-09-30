@@ -6,10 +6,9 @@
 
 Theme and Colours
 
-- Style all buttons
-- Individually colour table rows by search result / include-exclude
 - Logged in info display
 - logout / reset button
+- Checklist for completed tasks
 
 Before Next Deploy
 
@@ -25,6 +24,8 @@ Later On
 
 DONE!
 
+- Style all buttons
+- Individually colour table rows by search result / include-exclude
 - Playlist maker/select behaviour
   -Change to chosen select once playlist created
   -Dont deselect playlist when merely switching options

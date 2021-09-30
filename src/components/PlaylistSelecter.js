@@ -26,7 +26,6 @@ function PlaylistSelecter() {
   
     // Once a playlist is selected, it is saved into context.
     const onChangeHandler = event => {
-        console.log(event);
         playlists.forEach((playlist) => {
             if(playlist.id === event.target.value){
                 pbspotifyContext.setSelectedPlaylist(playlist);
