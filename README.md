@@ -4,20 +4,20 @@ ERRORS
 
 - address 429 Errors
 
-Before Next Deploy
+BEFORE SUBMISSION
 
-- Fix credentials problem (production vs dev)
-- need to change to netlify url (reset)
-
-Later On
-
+- Fix Show Select Dropdown, again.
+- API redesign & perhaps rehome
+- Delete redundant login code
+- See about public / private playlists?
+- make it look better on mobile (https://blog.bitsrc.io/how-to-make-your-web-apps-mobile-friendly-85bad8736dbf)
 - app name/title navbar/ bottom navbar
 - about page, donations link
-- Checklist for completed tasks
 - Vairable number of episodes searched
 
 DONE!
 
+- Checklist for completed tasks
 - Logged in info display
 - logout / reset button
 - Style all buttons
