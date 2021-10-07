@@ -136,7 +136,8 @@ const Showselect = () => {
     return (
             <Row>
                 <Col>
-                    <Form.Select name="selected show" id="show_select_dropdown" value ={selectedShow.id} onChange={e => showSelectionHandler(e)}>
+                    <Form.Select size="lg" name="selected show" id="show_select_dropdown" placeholder="Select a PBS Show" value ={selectedShow.id} onChange={e => showSelectionHandler(e)}>
+                        <option>Select a PBS Show</option>
                         {showList.map((show) => {
                             return (
                                 <option key={show.id + show.name} value={show.id} >{show.name}</option>
