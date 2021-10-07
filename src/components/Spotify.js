@@ -1,13 +1,17 @@
 import React, { useEffect, useContext} from "react";
 import axios from 'axios';
+import SpotifyWebApi from "spotify-web-api-js";
+import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button'
 import Login from './Login';
+import TodoList from './TodoList';
 import PlaylistMaker from './PlaylistMaker';
 import PlaylistSelecter from './PlaylistSelecter';
-import SpotifyWebApi from "spotify-web-api-js";
+import { apiURL, homeURL } from "./config";
+
 import PBSpotifyContext from "../context/pbspotify/pbspotifyContext";
 
 const spotify_api = new SpotifyWebApi();
@@ -19,7 +23,6 @@ function Spotify() {
   useEffect(() => {
 
     if (window.location.search){
-      console.log("Use Effect Window Location IF Statement start")
       const urlParams = new URLSearchParams(window.location.search);
       getToken(urlParams.get('session_id'))
     }
@@ -28,8 +31,7 @@ function Spotify() {
   
   const getToken = async (sessionId) => {
     try{
-      console.log('Getting Token from API')
-      const res = await axios.get('https://bitonio.herokuapp.com/get-token/' + sessionId);
+      const res = await axios.get( apiURL() + '/get-token/' + sessionId);
       spotify_api.setAccessToken(res.data.access_token);
       pbspotifyContext.setSpotify_API(spotify_api);
       }catch(e) {
@@ -80,9 +82,23 @@ function Spotify() {
     }
   }
 
+  
+  const renderLoginButtons = () => {
+    if (pbspotifyContext.Spotify_ID){
+      return (
+        <Row>
+          <Col>
+            <div id="loggedInDisplay">Logged in as <b>{pbspotifyContext.Spotify_ID.display_name}</b></div>
+          </Col>
+          <Col>
+            <Button variant="primary" size="sm" onClick={ () => Reset()}>Logout / Reset</Button>
+          </Col>
+        </Row>
+      )
+    }else return (<Login />)
+  }
   const Reset = () => {
     console.log("Reset");
-    // localStorage.setItem('localShowStorage', {});
     localStorage.clear();
     pbspotifyContext.setSpotify_API(null);
     pbspotifyContext.setSelectedPlaylist({});
@@ -92,33 +108,24 @@ function Spotify() {
     pbspotifyContext.setLoading(false);
     pbspotifyContext.setResultCount(0);
     pbspotifyContext.setCreateNewPlaylist(true);
-    window.location.replace('https://pbspotify.netlify.app');
+    window.location.replace(homeURL());
   }
-
-  const renderLoginButtons = () => {
-    if (pbspotifyContext.Spotify_ID){
-      return (
-        <div>
-          <Button variant="primary" size="sm" onClick={ () => Reset()}>Logout / Reset</Button>
-          <div id="loggedInDisplay">Logged in as <b>{pbspotifyContext.Spotify_ID.display_name}</b></div>
-        </div>  
-      )
-    }else return (<Login />)
-
-  }
-
+  
   return (
-    <Row>
-      <Col>
-        {renderLoginButtons()}
-      </Col>
-      <Col>
+    <Container>
+      {renderLoginButtons()}
+      <Row>
+        <TodoList />
+      </Row>
+      <Row>
         {renderPlaylistSelect()}
-      </Col>
-      <Col>
-        {renderPlaylistComponent()}
-      </Col>
-    </Row>
+      </Row>
+      <Row>
+        <Col>
+          {renderPlaylistComponent()}
+        </Col>
+      </Row>
+    </Container>
   )
 }
 

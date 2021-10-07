@@ -1,10 +1,10 @@
 import React, {useContext} from 'react'
 import Button from 'react-bootstrap/Button'
+import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+// import Col from 'react-bootstrap/Col';
 import PBSpotifyContext from "../context/pbspotify/pbspotifyContext";
 import { useAlert } from 'react-alert'
-import TodoList from './TodoList';
 
 const Searcher = () => {
 
@@ -115,18 +115,14 @@ const Searcher = () => {
   };
 
   return (
-    <Row>
-      <Col>
-        {renderSearchButton()}
-      </Col>
-      <Col>
-        <TodoList />
-      </Col>
-      <Col>
-        {renderSaveSongsButton()}
-      </Col>
-
-    </Row>
+    <Container>
+      <Row>
+          {renderSearchButton()}
+      </Row>
+      <Row>
+          {renderSaveSongsButton()}
+      </Row>
+    </Container>
   )
 };
 

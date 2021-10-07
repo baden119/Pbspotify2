@@ -20,7 +20,7 @@ function TableDisplay() {
         }
         if(pbspotifyContext.CompletedSearch || pbspotifyContext.Loading){
             headerElement.push("Spotify Search Results")
-            headerElement.push("Include")
+            // headerElement.push("Include")
         }
 
         return headerElement.map((key, index) => {
@@ -80,8 +80,8 @@ function TableDisplay() {
 
                             <td>{song.exclude_result ? <Button onClick={() => excludeResult(song.id)} className="excludedSong">{song.spotify_track} / {song.spotify_artist}</Button>
                                 : <Button onClick={() => excludeResult(song.id)} className="includedSong">{song.spotify_track} / {song.spotify_artist}</Button>}</td>
-                            <td className="Centered">{song.exclude_result ? <Button onClick={() => excludeResult(song.id)} className="excludedSong">✕</Button>
-                                : <Button onClick={() => excludeResult(song.id)} className="includedSong">✔</Button>}</td>
+                            {/* <td className="Centered">{song.exclude_result ? <Button onClick={() => excludeResult(song.id)} className="excludedSong">✕</Button>
+                                : <Button onClick={() => excludeResult(song.id)} className="includedSong">✔</Button>}</td> */}
                         </tr>
                     )
                 }else{

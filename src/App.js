@@ -2,10 +2,10 @@ import React from 'react';
 import './custom.scss'
 import Container from 'react-bootstrap/Container';
 
-import Showselect from './components/ShowSelect';
 import Spotify from './components/Spotify'
-import TableDisplay from './components/TableDisplay';
+import Showselect from './components/ShowSelect';
 import Searcher from './components/Searcher'
+import TableDisplay from './components/TableDisplay';
 
 import PBSpotifyState from './context/pbspotify/PBSpotifyState'
 
@@ -13,7 +13,7 @@ const App = () => {
 
   return (
       <PBSpotifyState>
-        <Container>
+        <Container fluid>
           <Spotify />
           <Showselect />
           <Searcher />
