@@ -1,5 +1,4 @@
 import React, { useEffect, useContext} from "react";
-import axios from 'axios';
 import SpotifyWebApi from "spotify-web-api-js";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -10,7 +9,7 @@ import Login from './Login';
 import TodoList from './TodoList';
 import PlaylistMaker from './PlaylistMaker';
 import PlaylistSelecter from './PlaylistSelecter';
-import { apiURL, homeURL } from "./config";
+import { homeURL } from "./config";
 
 import PBSpotifyContext from "../context/pbspotify/pbspotifyContext";
 
@@ -24,21 +23,12 @@ function Spotify() {
 
     if (window.location.search){
       const urlParams = new URLSearchParams(window.location.search);
-      getToken(urlParams.get('session_id'))
+      spotify_api.setAccessToken(urlParams.get('access_token'));
+      pbspotifyContext.setSpotify_API(spotify_api);
     }
     // eslint-disable-next-line
   }, []);
   
-  const getToken = async (sessionId) => {
-    try{
-      const res = await axios.get( apiURL() + '/get-token/' + sessionId);
-      spotify_api.setAccessToken(res.data.access_token);
-      pbspotifyContext.setSpotify_API(spotify_api);
-      }catch(e) {
-        console.error(e);
-      } 
-  };
-
   const onChangeHandler = event => {
     // pbspotifyContext.setSelectedPlaylist({});
     pbspotifyContext.setCreateNewPlaylist(JSON.parse(event.target.value));

@@ -1,22 +1,29 @@
 # TODOs
 
-ERRORS
-
-- address 429 Errors
-
 BEFORE SUBMISSION
 
-- Fix Show Select Dropdown, again.
-- API redesign & perhaps rehome
-- Delete redundant login code
-- See about public / private playlists?
-- make it look better on mobile (https://blog.bitsrc.io/how-to-make-your-web-apps-mobile-friendly-85bad8736dbf)
-- app name/title navbar/ bottom navbar
-- about page, donations link
-- Vairable number of episodes searched
+- ERRORS
+
+  - address 429 Errors
+  - Theres something up with Deeep space, i think its a track named --/-
+
+- FUNCTIONALITY
+
+  - API redesign
+  - Vairable number of episodes searched
+
+- DESIGN
+  - app name/title navbar/
+  - about page, donations link
+  - Fixed scroll of songlist with improved save button at bottom
+  - Todo list appearance, new font, centered, boardered.
 
 DONE!
 
+- See about public / private playlists
+- Fix Show Select Dropdown, again.
+- Delete redundant login code
+- make it look better on mobile
 - Checklist for completed tasks
 - Logged in info display
 - logout / reset button
