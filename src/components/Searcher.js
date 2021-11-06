@@ -2,7 +2,6 @@ import React, {useContext} from 'react'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-// import Col from 'react-bootstrap/Col';
 import PBSpotifyContext from "../context/pbspotify/pbspotifyContext";
 import { useAlert } from 'react-alert'
 
@@ -29,6 +28,7 @@ const Searcher = () => {
                 }else resultsList.push(advancedResult);
         }else if (result === "error"){
           alert.error("Error: Search Again")
+          console.log(result.error.response)
           resultsList.push(song);
         }else{
           resultsList.push(result);

@@ -1,24 +1,21 @@
 import React from 'react'; 
 import './custom.scss'
-import Container from 'react-bootstrap/Container';
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
-import Spotify from './components/Spotify'
-import Showselect from './components/ShowSelect';
-import Searcher from './components/Searcher'
-import TableDisplay from './components/TableDisplay';
-
+import Home from './components/pages/Home'
+import About from './components/pages/About';
 import PBSpotifyState from './context/pbspotify/PBSpotifyState'
 
 const App = () => {
 
   return (
       <PBSpotifyState>
-        <Container fluid>
-          <Spotify />
-          <Showselect />
-          <Searcher />
-          <TableDisplay />
-        </Container>    
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="about" element={<About />} />
+          </Routes>  
+        </Router>
       </PBSpotifyState>
   );
 }
