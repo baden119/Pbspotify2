@@ -1,9 +1,11 @@
 import React, {useContext} from 'react'
+import axios from 'axios';
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import PBSpotifyContext from "../context/pbspotify/pbspotifyContext";
 import { useAlert } from 'react-alert'
+import { apiURL } from "./config";
 
 const Searcher = () => {
 
@@ -74,10 +76,24 @@ const Searcher = () => {
       try {
         await pbspotifyContext.Spotify_API.addTracksToPlaylist(pbspotifyContext.SelectedPlaylist.id, array);
         fetchPlaylistTracks();
-        } catch(err) {
-          console.error(err);
-        }
+      } catch(err) {
+        console.error(err);
+      }
     })
+
+    // Post request to api to update usage totals inside a django model.
+
+    // This is needed for the project to meet course requirements.
+    axios.post((apiURL() + '/update_useage'), {
+      tracks: URI_array.length
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
     alert.success("Success! Songs saved to Spotify Playlist")
 
     //Duplicated code from SelectedPlaylist Component

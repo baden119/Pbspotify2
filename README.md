@@ -9,17 +9,18 @@ BEFORE SUBMISSION
 
 - FUNCTIONALITY
 
-  - API redesign
   - Vairable number of episodes searched
+  - Combine create playlist and save playlist functionality.
 
 - DESIGN
-  - app name/title navbar/
-  - about page, donations link
   - Fixed scroll of songlist with improved save button at bottom
   - Todo list appearance, new font, centered, boardered.
 
 DONE!
 
+- about page, donations link
+- app name/title navbar/
+- API redesign
 - See about public / private playlists
 - Fix Show Select Dropdown, again.
 - Delete redundant login code
