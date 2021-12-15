@@ -19,6 +19,12 @@ I created separate Django API to provide some back-end functionality for the Rea
 
 # Distinctiveness and Complexity
 
-Redo this section. Reduce everything.
+PBSpotify is distinctive because it automates a process which is very specific, and only relevant to a particular group of people: Spotify users who would like a playlist created from shows broadcast on PBS FM, a small community radio station in Melbourne, Australia. As far as web apps go I'd call that downright boutique.
 
-In terms of complexity, the app is as complex as it has to be to answer the question and fulfil the course requirements. I feel like it probably leans towards being 'too complex' rather than 'not complex enough'. The Spotify login and 'authorisation code flow' process, for instance, was vastly more difficult and complicated than I anticipated, but figuring it out was necessary, nevertheless.
+In terms of complexity, I had an idea of what I wanted the app to do, and tried to keep it as simple as possible while achieving this functionality. I feel like it probably leans towards being 'too complex' rather than 'not complex enough'. Parts of the project (the Spotify login and 'authorisation code flow' process for instance) definatly turned out to be more difficult and complicated than I anticipated, but figuring them out and making them work was necessary nevertheless.
+
+# Submitted Files
+
+The files I'm submitting along with this documentation are all the code i wrote for the app, however downloading these files and running a version of the app locally isn't really easily possible unfortunately. It was important to me personally that this app be deployed and hosted online and having it simultaneously 'available online' and 'available to be download and run locally by anyone' is simply beyond my capabilities right now.
+
+Hopefully [visiting the site online](https://pbspotify.netlify.app/ 'PBSpotify') for a demonstration of functionality is sufficient.
