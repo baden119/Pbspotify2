@@ -1,4 +1,4 @@
-# PBSpotify(https://pbspotify.netlify.app/ 'PBSpotify')
+# [PBSpotify](https://pbspotify.netlify.app/ 'PBSpotify')
 
 PBSpotify creates Spotify playlists based on the track lists of shows broadcast on PBS 106.7FM, a community radio station in Melbourne, Australia.
 To achieve this the app interacts with two different APIs. [The first](https://airnet.org.au/rest/stations/3pbs/programs 'Airnet Rest API') provides JSON data about PBSFM including information about particular PBSFM shows, and track lists for each episode of a show which are provided weekly by the PBSFM DJ. The second API is the Spotify Web API through which Spotify provides functionality for one of their users to authorise a third party app like this one to create and make changes to one of their playlists.
