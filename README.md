@@ -5,7 +5,7 @@ To achieve this the app interacts with two different APIs. [The first](https://a
 
 # Frontend
 
-#### https://pbspotify.netlify.app/
+https://pbspotify.netlify.app/
 
 I decided to use React for this project as I thought the ability to separate parts of the app into components and to hold data in state would make interacting with the two APIs more manageable. After looking at some introductory YouTube videos about React I decided to take an additional course from Udemy ['Brad Traversy - React front to Back'](https://www.udemy.com/course/modern-react-front-to-back/ 'Brad Traversy - React front to Back') which covered using [Create React App](https://github.com/facebook/create-react-app 'Create React App on Github'), organising functional components, using Context Hooks for global state management and hosting a React project on Netlify.
 
@@ -13,7 +13,7 @@ To make a Spotify playlist the app begins by creating an array of Song.js object
 
 # API
 
-#### https://bitonio.herokuapp.com/
+https://bitonio.herokuapp.com/
 
 I created separate Django API to provide some back-end functionality for the React front-end, primarily implementing the Spotify Web API ['authorisation code flow'](https://developer.spotify.com/documentation/general/guides/authorization/code-flow/ 'Spotify developer guide'), a complicated process of requests and page redirects which I was able to navigate after watching another YouTube tutorial ['Tech with Tim - Django & React Tutorial #13 - Spotify API Tutorial (Authentication & Tokens)'](https://www.youtube.com/watch?v=rYDDWVuv-kI 'Tech with Tim'). In order to fufil the CS50web Final Project requirements I also created a model which keeps track of the total number of songs added to playlists by everyone who uses the app. This data is displayed on the About page of the app.
 
