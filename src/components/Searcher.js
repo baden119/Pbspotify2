@@ -54,7 +54,6 @@ const Searcher = () => {
     // Spotify has a limit on how many songs can be added to a playlist with one request.
     const API_limit = 99;
 
-    //TODO Clean up, and try to understand this code a bit better
     pbspotifyContext.SongList.forEach((song) => {
       if(song.spotify_match_found && !song.exclude_result){
         URI_array = [...URI_array, song.spotify_URI]
@@ -82,7 +81,6 @@ const Searcher = () => {
     })
 
     // Post request to api to update usage totals inside a django model.
-
     // This is needed for the project to meet course requirements.
     axios.post((apiURL() + '/update_useage'), {
       tracks: URI_array.length
