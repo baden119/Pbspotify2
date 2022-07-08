@@ -1,3 +1,8 @@
+// The Song object is fundamental to PBSpotify.
+// Whenever a PBS show is accessed an array of these objects are created with data from the PBS API for each song on the track list.
+// When the user initiates a Spotify Search the app will loop through the array and these objects will be modified with additional data
+// that comes back from the Spotify API which will the allow for a Spotify playlist to be populated with these songs.  
+
 const Song = (new_id, track, artist, date) => {
 
     const id = new_id;            
