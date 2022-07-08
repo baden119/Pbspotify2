@@ -1,29 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
-import { apiURL } from '../config';
+// import { apiURL } from '../config';
 
 const About = () => {
   // const [tracksUseage, setTracksUseage] = useState('');
   // const [playListsUseage, setPlayListsUseage] = useState('');
 
-  useEffect(() => {
-    const getUseageStats = async () => {
-      try {
-        const res = await axios.get(apiURL() + '/api/useage/');
-        setTracksUseage(res.data[0].tracks_count);
-        setPlayListsUseage(res.data[0].playlists_count);
-        console.log(res.data[0]);
-      } catch (e) {
-        console.error(e);
-      }
-    };
+  // useEffect(() => {
+  //   const getUseageStats = async () => {
+  //     try {
+  //       const res = await axios.get(apiURL() + '/api/useage/');
+  //       setTracksUseage(res.data[0].tracks_count);
+  //       setPlayListsUseage(res.data[0].playlists_count);
+  //       console.log(res.data[0]);
+  //     } catch (e) {
+  //       console.error(e);
+  //     }
+  //   };
 
-    getUseageStats();
-    // eslint-disable-next-line
-  }, []);
+  //   getUseageStats();
+  //   // eslint-disable-next-line
+  // }, []);
 
   return (
     <Container>
