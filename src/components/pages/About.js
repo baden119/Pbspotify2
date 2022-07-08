@@ -6,8 +6,8 @@ import Button from 'react-bootstrap/Button';
 import { apiURL } from '../config';
 
 const About = () => {
-  const [tracksUseage, setTracksUseage] = useState('');
-  const [playListsUseage, setPlayListsUseage] = useState('');
+  // const [tracksUseage, setTracksUseage] = useState('');
+  // const [playListsUseage, setPlayListsUseage] = useState('');
 
   useEffect(() => {
     const getUseageStats = async () => {
