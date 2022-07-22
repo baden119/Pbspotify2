@@ -2,7 +2,7 @@ const deploy = true;
 
 export const homeURL = () => {
   if (deploy) {
-    return 'https://pbspotify.netlify.app';
+    return 'https://pbspotify.netlify.app/';
   } else return 'http://localhost:3000/';
 };
 
