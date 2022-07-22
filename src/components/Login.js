@@ -2,9 +2,9 @@ import React from 'react';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import { homeURL, scopes } from './config';
-import { CLIENT_ID } from './credentials';
 
 const Login = () => {
+  const CLIENT_ID = '33a2bac1ec3649429a5db59eac210602';
   const authEndpoint = 'https://accounts.spotify.com/authorize';
 
   const loginUrl = `${authEndpoint}?client_id=${CLIENT_ID}&redirect_uri=${homeURL()}&scope=${scopes.join(
