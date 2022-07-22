@@ -24,3 +24,9 @@ yarn-error.log*
 
 # Local Netlify folder
 .netlify
+
+# Spotify Developer Credentials
+/src/components/credentials.js
+
+# Developers Log File
+Salient_Log.txt

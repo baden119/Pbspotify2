@@ -1,25 +1,29 @@
-import React from 'react'
+import React from 'react';
 import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/Button'
-import axios from 'axios';
-import { apiURL } from "./config";
+import Button from 'react-bootstrap/Button';
+import { homeURL, scopes } from './config';
+import { CLIENT_ID } from './credentials';
 
 const Login = () => {
-  
-  const spotifyLogin= async () => {
-    try{
-      const res = await axios.get( apiURL() + '/get-auth-url');
-      window.location.assign(res.data.url);
-    }catch(e) {
-      console.error(e);
-    } 
-    };
+  const authEndpoint = 'https://accounts.spotify.com/authorize';
+
+  const loginUrl = `${authEndpoint}?client_id=${CLIENT_ID}&redirect_uri=${homeURL()}&scope=${scopes.join(
+    '%20'
+  )}&response_type=token&show_dialog=true`;
+
+  const spotifyLogin = async () => {
+    window.location.assign(loginUrl);
+  };
 
   return (
+    <div>
       <Row>
-        <Button className="login" size="lg" onClick={ () => spotifyLogin()}>Login with Spotify</Button>
+        <Button className='login' size='lg' onClick={() => spotifyLogin()}>
+          Login With Spotify
+        </Button>
       </Row>
-  )
-}
+    </div>
+  );
+};
 
-export default Login
+export default Login;
