@@ -3,49 +3,49 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
-import { useAsync } from 'react-use';
-import { useThrottleRequests } from '../hooks/useThrottleRequests';
+// import { useAsync } from 'react-use';
+// import { useThrottleRequests } from '../hooks/useThrottleRequests';
 import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
 import Song from './Song';
 import { HardCodedShowList } from './ShowList';
 
 //  Shows using ThrottleRequests Hook
 // (https://blog.logrocket.com/throttling-data-requests-with-react-hooks/)
-const useThrottleShowRetrieval = (showList) => {
-  const { throttle, updateThrottle } = useThrottleRequests();
-  const [progressMessage, setProgressMessage] = useState('');
+// const useThrottleShowRetrieval = (showList) => {
+//   const { throttle, updateThrottle } = useThrottleRequests();
+//   const [progressMessage, setProgressMessage] = useState('');
 
-  const currentDate = new Date();
-  const recentShowDate = new Date(
-    currentDate.setFullYear(currentDate.getFullYear() - 1)
-  );
+//   const currentDate = new Date();
+//   const recentShowDate = new Date(
+//     currentDate.setFullYear(currentDate.getFullYear() - 1)
+//   );
 
-  useAsync(async () => {
-    if (!showList) return;
+//   useAsync(async () => {
+//     if (!showList) return;
 
-    setProgressMessage('loading show episodes');
+//     setProgressMessage('loading show episodes');
 
-    const requestsToMake = showList.map((show, index) => async () => {
-      try {
-        if (show.url !== 'https://airnet.org.au/rest/stations/3pbs/programs/') {
-          const res = await axios.get(`${show.url}/episodes`);
-          setProgressMessage(`filtering ${index} / ${showList.length}...`);
-          const latestdate = res.data[0].start;
-          const convertedDate = new Date(latestdate);
-          if (convertedDate > recentShowDate) {
-            updateThrottle.requestSucceededWithData(show);
-          }
-        }
-      } catch (error) {
-        updateThrottle.requestFailedWithError(error);
-      }
-    });
+//     const requestsToMake = showList.map((show, index) => async () => {
+//       try {
+//         if (show.url !== 'https://airnet.org.au/rest/stations/3pbs/programs/') {
+//           const res = await axios.get(`${show.url}/episodes`);
+//           setProgressMessage(`filtering ${index} / ${showList.length}...`);
+//           const latestdate = res.data[0].start;
+//           const convertedDate = new Date(latestdate);
+//           if (convertedDate > recentShowDate) {
+//             updateThrottle.requestSucceededWithData(show);
+//           }
+//         }
+//       } catch (error) {
+//         updateThrottle.requestFailedWithError(error);
+//       }
+//     });
 
-    await updateThrottle.queueRequests(requestsToMake);
-    setProgressMessage('');
-  }, [showList, updateThrottle]);
-  return { throttle, progressMessage };
-};
+//     await updateThrottle.queueRequests(requestsToMake);
+//     setProgressMessage('');
+//   }, [showList, updateThrottle]);
+//   return { throttle, progressMessage };
+// };
 
 const Showselect = () => {
   const pbspotifyContext = useContext(PBSpotifyContext);
@@ -56,9 +56,9 @@ const Showselect = () => {
   const [selectedShow, setSelectedShow] = useState(
     JSON.parse(localStorage.getItem('localShowStorage')) || {}
   );
-  const [rawShowList, setRawShowList] = useState([]);
-  const [filteredShowList, setFilteredList] = useState([]);
-  const { progressMessage, throttle } = useThrottleShowRetrieval(rawShowList);
+  // const [rawShowList, setRawShowList] = useState([]);
+  // const [filteredShowList, setFilteredList] = useState([]);
+  // const { progressMessage, throttle } = useThrottleShowRetrieval(rawShowList);
 
   // Much of this code is no longer needed with the HardCodedShowList data being kept on file, but is kept here as its a good working example of the useThrottle hook, to be cleaned up later.
 
@@ -108,7 +108,7 @@ const Showselect = () => {
     ShowList.sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0));
 
     // Setting the Raw Showlist will trigger useThrottleShowRetrieval function, returning a filtered show list.
-    setRawShowList(ShowList);
+    // setRawShowList(ShowList);
   };
 
   // Get Song list for selected show, called by useEffect on show selection.
