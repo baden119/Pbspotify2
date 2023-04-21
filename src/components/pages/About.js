@@ -13,7 +13,7 @@ const About = () => {
       </p>
       <p>
         This app was created by Baden Allen as the final project for the CS50
-        Web Programming course in 2021.
+        Web Programming course.
       </p>
       <p>
         You can support PBS 106.7FM by becomming a member or making a donation.

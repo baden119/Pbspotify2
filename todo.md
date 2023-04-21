@@ -5,7 +5,6 @@ BEFORE SUBMISSION
 - ERRORS
 
   - address 429 Errors
-  - Theres something up with Deeep space, i think its a track named --/-
 
 - FUNCTIONALITY
 
@@ -18,6 +17,7 @@ BEFORE SUBMISSION
 
 DONE!
 
+- Theres something up with Deeep space, i think its a track named --/-
 - about page, donations link
 - app name/title navbar/
 - API redesign

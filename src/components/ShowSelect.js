@@ -7,6 +7,7 @@ import { useAsync } from 'react-use';
 import { useThrottleRequests } from '../hooks/useThrottleRequests';
 import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
 import Song from './Song';
+import { HardCodedShowList } from './ShowList';
 
 //  Shows using ThrottleRequests Hook
 // (https://blog.logrocket.com/throttling-data-requests-with-react-hooks/)
@@ -33,12 +34,9 @@ const useThrottleShowRetrieval = (showList) => {
           const convertedDate = new Date(latestdate);
           if (convertedDate > recentShowDate) {
             updateThrottle.requestSucceededWithData(show);
-          } else {
-            console.log(show.name, 'filtered: Too Damn Old');
           }
         }
       } catch (error) {
-        console.error(`failed to load ${show.name}`);
         updateThrottle.requestFailedWithError(error);
       }
     });
@@ -62,14 +60,17 @@ const Showselect = () => {
   const [filteredShowList, setFilteredList] = useState([]);
   const { progressMessage, throttle } = useThrottleShowRetrieval(rawShowList);
 
+  // Much of this code is no longer needed with the HardCodedShowList data being kept on file, but is kept here as its a good working example of the useThrottle hook, to be cleaned up later.
+
   useEffect(() => {
     getRawShowList();
+    console.log('Hard Coded Data', HardCodedShowList);
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-    setFilteredList(throttle.values);
-  }, [throttle]);
+  // useEffect(() => {
+  //   setFilteredList(throttle.values);
+  // }, [throttle]);
 
   useEffect(() => {
     getSongList();
@@ -106,7 +107,7 @@ const Showselect = () => {
     // https://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value
     ShowList.sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0));
 
-    // Setting the Raw Showlist will trigger
+    // Setting the Raw Showlist will trigger useThrottleShowRetrieval function, returning a filtered show list.
     setRawShowList(ShowList);
   };
 
@@ -177,7 +178,7 @@ const Showselect = () => {
 
   // Handler for Show Selection dropdown.
   const showSelectionHandler = (e) => {
-    filteredShowList.forEach((show) => {
+    HardCodedShowList.forEach((show) => {
       if (String(show.id) === e.target.value) {
         // Save show info state
         setSelectedShow(show);
@@ -185,29 +186,37 @@ const Showselect = () => {
     });
   };
 
+  // Function to render Show Select Menu or Loading message depending on load status.
+  const renderShowSelect = () => {
+    // if (progressMessage !== '') {
+    //   return <span>{progressMessage}</span>;
+    // } else {
+    return (
+      <Form.Select
+        size='lg'
+        name='selected show'
+        id='show_select_dropdown'
+        placeholder='Select a PBS Show'
+        value={selectedShow.id}
+        onChange={(e) => showSelectionHandler(e)}
+      >
+        <option>Select a PBS Show</option>
+        {HardCodedShowList.map((show) => {
+          return (
+            <option key={show.id} value={show.id}>
+              {show.name}
+            </option>
+          );
+        })}
+        ;
+      </Form.Select>
+    );
+    // }
+  };
+
   return (
     <Row>
-      <span>{progressMessage}</span>
-      <Col>
-        <Form.Select
-          size='lg'
-          name='selected show'
-          id='show_select_dropdown'
-          placeholder='Select a PBS Show'
-          value={selectedShow.id}
-          onChange={(e) => showSelectionHandler(e)}
-        >
-          <option>Select a PBS Show</option>
-          {filteredShowList.map((show) => {
-            return (
-              <option key={show.id} value={show.id}>
-                {show.name}
-              </option>
-            );
-          })}
-          ;
-        </Form.Select>
-      </Col>
+      <Col>{renderShowSelect()}</Col>
     </Row>
   );
 };
