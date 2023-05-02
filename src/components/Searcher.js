@@ -13,30 +13,44 @@ const Searcher = () => {
   const SpotifySearch = async () => {
     pbspotifyContext.setLoading(true);
     const resultsList = [];
-    await Promise.all(
-      pbspotifyContext.SongList.map(async (song) => {
-        const result = await song.searchSpotify(pbspotifyContext.Spotify_API);
-        if (result === false) {
-          const advancedResult = await song.advancedSearchSpotify(
-            pbspotifyContext.Spotify_API
-          );
-          if (advancedResult === false) {
-            resultsList.push(song);
+
+    pbspotifyContext.SongList.map((song, index) => {
+      setTimeout(() => {
+        song
+          .searchSpotify(pbspotifyContext.Spotify_API)
+          .then(function (result) {
+            resultsList.push(result);
             pbspotifyContext.setResultCount(resultsList.length);
-          } else if (result === 'error') {
-            alert.error('Error: Search Again');
-            resultsList.push(song);
-          } else resultsList.push(advancedResult);
-        } else if (result === 'error') {
-          alert.error('Error: Search Again');
-          console.log(result.error.response);
-          resultsList.push(song);
-        } else {
-          resultsList.push(result);
-          pbspotifyContext.setResultCount(resultsList.length);
-        }
-      })
-    );
+          })
+          .catch(function (error) {});
+      }, 50 * index);
+    });
+
+    // await Promise.all(
+    //   pbspotifyContext.SongList.map(async (song) => {
+    //     const result = await song.searchSpotify(pbspotifyContext.Spotify_API);
+    //     if (result === false) {
+    //       const advancedResult = await song.advancedSearchSpotify(
+    //         pbspotifyContext.Spotify_API
+    //       );
+    //       if (advancedResult === false) {
+    //         resultsList.push(song);
+    //         pbspotifyContext.setResultCount(resultsList.length);
+    //       } else if (result === 'error') {
+    //         alert.error('Error: Search Again');
+    //         resultsList.push(song);
+    //       } else resultsList.push(advancedResult);
+    //     } else if (result === 'error') {
+    //       alert.error('Error: Search Again');
+    //       console.log(result.error.response);
+    //       resultsList.push(song);
+    //     } else {
+    //       resultsList.push(result);
+    //       pbspotifyContext.setResultCount(resultsList.length);
+    //     }
+    //   })
+    // );
+
     const sortedList = resultsList.sort(function (a, b) {
       return a.id - b.id;
     });
