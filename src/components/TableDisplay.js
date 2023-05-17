@@ -7,175 +7,174 @@ import Spinner from 'react-bootstrap/Spinner';
 import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
 import SelectedPlaylist from './SelectedPlaylist';
 
-function TableDisplay() {
-  const pbspotifyContext = useContext(PBSpotifyContext);
+const CreateDate = (date) => {
+  return new Intl.DateTimeFormat('en-AU', {
+    day: 'numeric',
+    month: 'numeric',
+    year: '2-digit',
+  }).format(new Date(date));
+};
 
-  // Render Header Elements for Table Display
-  const renderHeader = () => {
-    let headerElement = [];
-    if (pbspotifyContext.SongList.length) {
-      headerElement.push('Date');
-      headerElement.push('Song Info from PBS');
-    }
-    if (pbspotifyContext.CompletedSearch || pbspotifyContext.Loading) {
-      headerElement.push('Spotify Search Results');
-      // headerElement.push("Include")
-    }
+const BeforeSearch = () => {
+  const { SongList } = useContext(PBSpotifyContext);
+  return (
+    <Table striped bordered size='sm'>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Song Info from PBS</th>
+        </tr>
+      </thead>
+      <tbody>
+        {SongList.map((song) => {
+          return (
+            <tr key={song.id}>
+              <td className='dateColumn'>{CreateDate(song.pbs_date)}</td>
+              <td>
+                {song.pbs_track} / {song.pbs_artist}{' '}
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </Table>
+  );
+};
 
-    return headerElement.map((key, index) => {
-      return <th key={index}>{key}</th>;
-    });
+const DuringSearch = () => {
+  const { SongList, ResultCount } = useContext(PBSpotifyContext);
+
+  return (
+    <Table striped bordered size='sm'>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Song Info from PBS</th>
+          <th>Spotify Search Results</th>
+        </tr>
+      </thead>
+      <tbody>
+        {SongList.map((song, index) => {
+          if (index === 0) {
+            return (
+              <tr key={song.id}>
+                <td className='dateColumn'>{CreateDate(song.pbs_date)}</td>
+                <td>
+                  {song.pbs_track} / {song.pbs_artist}{' '}
+                </td>
+                <td colSpan='2' rowSpan='0' className='bigSpan Centered'>
+                  <h5>Searching...</h5>
+                  <div id='loadingContainer'>
+                    <Spinner id='searchLoading' animation='grow' />
+                  </div>
+                  <h6>Results Returned</h6>
+                  <h3>
+                    {ResultCount} / {SongList.length}
+                  </h3>
+                </td>
+              </tr>
+            );
+          } else {
+            return (
+              <tr key={song.id}>
+                <td className='dateColumn'>{CreateDate(song.pbs_date)}</td>
+                <td>
+                  {song.pbs_track} / {song.pbs_artist}{' '}
+                </td>
+              </tr>
+            );
+          }
+        })}
+      </tbody>
+    </Table>
+  );
+};
+
+const AfterSearch = () => {
+  const { SongList, setSongList } = useContext(PBSpotifyContext);
+
+  const excludeResult = (id) => {
+    let tempSongList = SongList;
+    tempSongList[id].exclude_result = !tempSongList[id].exclude_result;
+    setSongList(tempSongList);
   };
 
-  // Render Table DIsplay Body (Includes Loading Spinner)
-  const renderBody = () => {
-    // Initial state, PBS songlist but no search
-    if (
-      pbspotifyContext.SongList.length &&
-      !pbspotifyContext.Loading &&
-      !pbspotifyContext.CompletedSearch
-    ) {
-      return pbspotifyContext.SongList.map((song) => {
-        return (
-          <tr key={song.id}>
-            <td className='dateColumn'>
-              {new Intl.DateTimeFormat('en-AU', {
-                day: 'numeric',
-                month: 'numeric',
-                year: '2-digit',
-              }).format(new Date(song.pbs_date))}
-            </td>
-            <td>
-              {song.pbs_track} / {song.pbs_artist}{' '}
-            </td>
-          </tr>
-        );
-      });
-      // Condition to display loading spinner while searching.
-    } else if (pbspotifyContext.SongList.length && pbspotifyContext.Loading) {
-      return pbspotifyContext.SongList.map((song, index) => {
-        if (index === 0) {
-          return (
-            <tr key={song.id}>
-              <td className='dateColumn'>
-                {new Intl.DateTimeFormat('en-AU', {
-                  day: 'numeric',
-                  month: 'numeric',
-                  year: '2-digit',
-                }).format(new Date(song.pbs_date))}
-              </td>
-              <td>
-                {song.pbs_track} / {song.pbs_artist}{' '}
-              </td>
-              <td colSpan='2' rowSpan='0' className='bigSpan Centered'>
-                <h5>Searching...</h5>
-                <div id='loadingContainer'>
-                  <Spinner id='searchLoading' animation='grow' />
-                </div>
-                <h6>Results Returned</h6>
-                <h3>
-                  {pbspotifyContext.ResultCount} /{' '}
-                  {pbspotifyContext.SongList.length}
-                </h3>
-              </td>
-            </tr>
-          );
-        } else {
-          return (
-            <tr key={song.id}>
-              <td className='dateColumn'>
-                {new Intl.DateTimeFormat('en-AU', {
-                  day: 'numeric',
-                  month: 'numeric',
-                  year: '2-digit',
-                }).format(new Date(song.pbs_date))}
-              </td>
-              <td>
-                {song.pbs_track} / {song.pbs_artist}{' '}
-              </td>
-            </tr>
-          );
-        }
-      });
-      // Condition for completed search. Renders search results or lack thereof.
-    } else if (
-      pbspotifyContext.SongList.length &&
-      pbspotifyContext.CompletedSearch
-    ) {
-      return pbspotifyContext.SongList.map((song) => {
-        if (song.spotify_match_found) {
-          return (
-            <tr key={song.id}>
-              <td className='dateColumn'>
-                {new Intl.DateTimeFormat('en-AU', {
-                  day: 'numeric',
-                  month: 'numeric',
-                  year: '2-digit',
-                }).format(new Date(song.pbs_date))}
-              </td>
-              <td>
-                {song.pbs_track} / {song.pbs_artist}{' '}
-              </td>
+  return (
+    <Table striped bordered size='sm'>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Song Info from PBS</th>
+          <th>Spotify Search Results</th>
+        </tr>
+      </thead>
+      <tbody>
+        {SongList.map((song) => {
+          if (song.spotify_URI) {
+            return (
+              <tr key={song.id}>
+                <td className='dateColumn'>{CreateDate(song.pbs_date)}</td>
+                <td>
+                  {song.pbs_track} / {song.pbs_artist}{' '}
+                </td>
 
-              <td>
-                {song.exclude_result ? (
-                  <Button
-                    onClick={() => excludeResult(song.id)}
-                    className='excludedSong'
-                  >
-                    {song.spotify_track} / {song.spotify_artist}
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={() => excludeResult(song.id)}
-                    className='includedSong'
-                  >
-                    {song.spotify_track} / {song.spotify_artist}
-                  </Button>
-                )}
-              </td>
-              {/* <td className="Centered">{song.exclude_result ? <Button onClick={() => excludeResult(song.id)} className="excludedSong">✕</Button>
-                                : <Button onClick={() => excludeResult(song.id)} className="includedSong">✔</Button>}</td> */}
-            </tr>
-          );
-        } else {
-          return (
-            <tr key={song.id}>
-              {/* <td className="dateColumn">{new Intl.DateTimeFormat('en-AU', {day: 'numeric', month:'numeric', year: '2-digit'}).format(new Date(song.pbs_date))}</td> */}
-              <td>
-                {song.pbs_track} / {song.pbs_artist}{' '}
-              </td>
-              <td>No Results Found</td>
-            </tr>
-          );
-        }
-      });
-    }
+                <td>
+                  {song.exclude_result ? (
+                    <Button
+                      onClick={() => excludeResult(song.id)}
+                      className='excludedSong'
+                    >
+                      {song.spotify_track} / {song.spotify_artist}
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => excludeResult(song.id)}
+                      className='includedSong'
+                    >
+                      {song.spotify_track} / {song.spotify_artist}
+                    </Button>
+                  )}
+                </td>
+              </tr>
+            );
+          } else {
+            return (
+              <tr key={song.id}>
+                <td className='dateColumn'>{CreateDate(song.pbs_date)}</td>
+                <td>
+                  {song.pbs_track} / {song.pbs_artist}{' '}
+                </td>
+                <td>No Results Found</td>
+              </tr>
+            );
+          }
+        })}
+      </tbody>
+    </Table>
+  );
+};
+
+function TableDisplay() {
+  const { CompletedSearch, Loading, SongList, SelectedPlaylist } =
+    useContext(PBSpotifyContext);
+
+  const renderTable = () => {
+    if (SongList.length && !Loading && !CompletedSearch) {
+      return <BeforeSearch />;
+    } else if (SongList.length && Loading && !CompletedSearch) {
+      return <DuringSearch SongList={SongList} />;
+    } else return <AfterSearch SongList={SongList} />;
   };
 
   const renderPlaylist = () => {
-    //https://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
-    if (Object.keys(pbspotifyContext.SelectedPlaylist).length !== 0) {
+    if (Object.keys(SelectedPlaylist).length !== 0) {
       return <SelectedPlaylist />;
     }
   };
 
-  const excludeResult = (id) => {
-    let tempSongList = pbspotifyContext.SongList;
-    tempSongList[id].exclude_result = !tempSongList[id].exclude_result;
-    pbspotifyContext.setSongList(tempSongList);
-  };
-
   return (
     <Row className='TableDisplay'>
-      <Col>
-        <Table striped bordered size='sm'>
-          <thead>
-            <tr>{renderHeader()}</tr>
-          </thead>
-          <tbody>{renderBody()}</tbody>
-        </Table>
-      </Col>
+      <Col>{renderTable()}</Col>
       {renderPlaylist()}
     </Row>
   );

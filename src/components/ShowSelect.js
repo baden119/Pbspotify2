@@ -4,11 +4,10 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
-import Song from './Song';
 import { HardCodedShowList } from './ShowList';
 
 const Showselect = () => {
-  const pbspotifyContext = useContext(PBSpotifyContext);
+  const { setSongList, setCompletedSearch } = useContext(PBSpotifyContext);
 
   // Set number of episodes to fetch
   const episodeCount = 3;
@@ -19,7 +18,7 @@ const Showselect = () => {
 
   useEffect(() => {
     getSongList();
-    pbspotifyContext.setSongList([]);
+    setSongList([]);
     localStorage.setItem('localShowStorage', JSON.stringify(selectedShow));
     // eslint-disable-next-line
   }, [selectedShow]);
@@ -59,24 +58,42 @@ const Showselect = () => {
       }
     };
 
-    // 27/04/23 i think idcount here could be replaced with an index parameter in the map function.
     const runAsyncFunctions = async () => {
       if (selectedShow.url != null) {
+        let idcount = 0;
         const episodes = await getEpisodeList();
         const songList = await Promise.all(
           episodes.map(async (episode) => {
             const songList = [];
             const episodedata = await getEpisodeData(episode);
-            episodedata.forEach((item, index) => {
-              const song = Song(index, item.track, item.artist, episode.start);
+            episodedata.forEach((item) => {
+              // Condition here shortens array for testing.
+              const song = {
+                id: idcount,
+                pbs_track: item.track,
+                pbs_artist: item.artist,
+                pbs_date: episode.start,
+              };
+              idcount += 1;
               songList.push(song);
             });
             return songList;
           })
         );
         // flat() concaternates the seperate episode arrays down into a single array.
-        pbspotifyContext.setSongList(songList.flat());
-        pbspotifyContext.setCompletedSearch(false);
+
+        // let newSongList = songList.flat().slice(0, 2);
+        // newSongList.push({
+        //   id: 3,
+        //   pbs_track:
+        //     'ikjshdkjashdkajsd ajhsgdkajsghdkjashd ashdiausgdiaugsdkjasd',
+        //   pbs_artist: 'oisuadoiansdi aosiduhuaiosdgoai aosudghioausdgo',
+        //   pbs_date: new Date(),
+        // });
+
+        // setSongList(newSongList);
+        setSongList(songList.flat());
+        setCompletedSearch(false);
       }
     };
 

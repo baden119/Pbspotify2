@@ -30,25 +30,36 @@ function getHashParams() {
 }
 
 function Spotify() {
-  const pbspotifyContext = useContext(PBSpotifyContext);
+  const {
+    setLoading,
+    setResultCount,
+    setSelectedPlaylist,
+    setSongList,
+    setPlaylistTracks,
+    setCompletedSearch,
+    setSpotify_API,
+    setCreateNewPlaylist,
+    Spotify_ID,
+    CreateNewPlaylist,
+  } = useContext(PBSpotifyContext);
 
   useEffect(() => {
     const hashParams = getHashParams();
     if (Object.keys(hashParams).length !== 0) {
       spotify_api.setAccessToken(hashParams.access_token);
-      pbspotifyContext.setSpotify_API(spotify_api);
+      setSpotify_API(spotify_api);
       window.location.hash = '';
     }
     // eslint-disable-next-line
   }, []);
 
   const onChangeHandler = (event) => {
-    // pbspotifyContext.setSelectedPlaylist({});
-    pbspotifyContext.setCreateNewPlaylist(JSON.parse(event.target.value));
+    // setSelectedPlaylist({});
+    setCreateNewPlaylist(JSON.parse(event.target.value));
   };
 
   const renderPlaylistSelect = () => {
-    if (pbspotifyContext.Spotify_ID) {
+    if (Spotify_ID) {
       return (
         <Form>
           <Form.Check
@@ -57,7 +68,7 @@ function Spotify() {
             label='Create a new Spotify playlist'
             value={true}
             onChange={onChangeHandler}
-            checked={pbspotifyContext.CreateNewPlaylist}
+            checked={CreateNewPlaylist}
           />
           <Form.Check
             type='radio'
@@ -65,7 +76,7 @@ function Spotify() {
             label='Add to one of your playlists'
             value={false}
             onChange={onChangeHandler}
-            checked={!pbspotifyContext.CreateNewPlaylist}
+            checked={!CreateNewPlaylist}
           />
         </Form>
       );
@@ -73,8 +84,8 @@ function Spotify() {
   };
 
   const renderPlaylistComponent = () => {
-    if (pbspotifyContext.Spotify_ID) {
-      if (pbspotifyContext.CreateNewPlaylist) {
+    if (Spotify_ID) {
+      if (CreateNewPlaylist) {
         return <PlaylistMaker />;
       } else {
         return <PlaylistSelecter />;
@@ -83,12 +94,12 @@ function Spotify() {
   };
 
   const renderLoginButtons = () => {
-    if (pbspotifyContext.Spotify_ID) {
+    if (Spotify_ID) {
       return (
         <Row>
           <Col>
             <div id='loggedInDisplay'>
-              Logged in as <b>{pbspotifyContext.Spotify_ID.display_name}</b>
+              Logged in as <b>{Spotify_ID.display_name}</b>
             </div>
           </Col>
           <Col>
@@ -103,14 +114,14 @@ function Spotify() {
   const Reset = () => {
     console.log('Reset');
     localStorage.clear();
-    pbspotifyContext.setSpotify_API(null);
-    pbspotifyContext.setSelectedPlaylist({});
-    pbspotifyContext.setSongList([]);
-    pbspotifyContext.setPlaylistTracks([]);
-    pbspotifyContext.setCompletedSearch(false);
-    pbspotifyContext.setLoading(false);
-    pbspotifyContext.setResultCount(0);
-    pbspotifyContext.setCreateNewPlaylist(true);
+    setSpotify_API(null);
+    setSelectedPlaylist({});
+    setSongList([]);
+    setPlaylistTracks([]);
+    setCompletedSearch(false);
+    setLoading(false);
+    setResultCount(0);
+    setCreateNewPlaylist(true);
     window.location.replace(homeURL());
   };
 
