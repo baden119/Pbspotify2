@@ -10,7 +10,6 @@ const Searcher = () => {
     CompletedSearch,
     SongList,
     setLoading,
-    setResultCount,
     Spotify_API,
     SelectedPlaylist,
     setSongList,
@@ -18,12 +17,11 @@ const Searcher = () => {
     setCompletedSearch,
   } = useContext(PBSpotifyContext);
 
-  const delayTime = 0;
+  const delayTime = 75;
   const alert = useAlert();
 
-  const SpotifySearch = async () => {
-    const delay = () =>
-      new Promise((resolve) => setTimeout(resolve, delayTime));
+  const SpotifySearch = () => {
+    const delay = (ms = delayTime) => new Promise((r) => setTimeout(r, ms));
 
     // Strips common symbols and abbreviations from data provided by the PBS API, used if initial search returns no results.
     const stripString = (string) => {
@@ -46,64 +44,81 @@ const Searcher = () => {
       return string;
     };
 
+    const createRequestPromise = (pbs_track, pbs_artist, id) => {
+      return new Promise(function (resolve, reject) {
+        Spotify_API.searchTracks(pbs_track + ' ' + pbs_artist, {
+          limit: 1,
+        }).then(function (res) {
+          if (res.tracks.items[0]) {
+            resolve(res.tracks.items[0]);
+          } else {
+            console.log('No Results Found', id);
+            resolve(false);
+          }
+        });
+      });
+    };
+
     // Updates a song object with data returned from the Spotify API
     const updateSongWithResults = (song, response) => {
-      song.spotify_track = response.tracks.items[0].name;
-      song.spotify_artist = response.tracks.items[0].artists[0].name;
-      song.spotify_URI = response.tracks.items[0].uri;
+      song.spotify_track = response.name;
+      song.spotify_artist = response.artists[0].name;
+      song.spotify_URI = response.uri;
       song.exclude_result = false;
-      console.log(song);
       return song;
     };
 
-    const searchAndSetSongData = async (song) => {
-      // Delay to throttle requests to Spotify API (avoids 429 response errors)
-      await delay();
-      try {
-        // Sending request to Spotify API
-        const response = await Spotify_API.searchTracks(
-          song.pbs_track + ' ' + song.pbs_artist,
-          { limit: 1 }
+    const getInSeries = async (songListWithPromises) => {
+      let advancedSearchNeeded = [];
+      for (let song of songListWithPromises) {
+        await delay().then(
+          song.promise.then(function (result) {
+            if (result) {
+              song = updateSongWithResults(song, result);
+              const songListCopy = [...SongList];
+              songListCopy[song.id] = song;
+              setSongList(songListCopy);
+            } else {
+              song.response = false;
+              console.log('Song Not Found', song.id);
+              advancedSearchNeeded.push(song);
+            }
+          })
         );
-        // If the response includes items it is presumed to have found a match and the Song object is updated with data returned from Spotift API.
-        if (response.tracks.items[0]) {
-          updateSongWithResults(song, response);
-        } else {
-          // If there are no items in the response the inputs failed to find a match and an 'Advanced Search' is attempted with various symbols and common abbreviations removed.
-          await delay();
-          console.log('Advanced searching', song.id);
-          const response = await Spotify_API.searchTracks(
-            stripString(song.pbs_track) + ' ' + stripString(song.pbs_artist),
-            { limit: 1 }
-          );
-          // If the advanced search response includes items it is assumed to have found a match.
-          if (response.tracks.items[0]) {
-            updateSongWithResults(song, response);
-          } else {
-            // No items in the response from the advanced search indicates the song is not in the Spotify database.
-            return;
-          }
-        }
-      } catch (error) {
-        console.error(error);
       }
-      return song;
+      return advancedSearchNeeded;
     };
 
-    setLoading(true);
-    let ResultCount = 0;
-    const songListCopy = [...SongList];
-    for (let i = 0; i < songListCopy.length; i++) {
-      await searchAndSetSongData(songListCopy[i]);
-      ResultCount++;
-      setResultCount(ResultCount);
-      setSongList(songListCopy);
-    }
+    async function searchAndSetSongData() {
+      setLoading(true);
+      setCompletedSearch(false);
+      const songListCopy = [...SongList];
 
-    alert.info('Search Complete.');
-    setCompletedSearch(true);
-    setLoading(false);
-    setResultCount(0);
+      const songListWithPromises = songListCopy.map((song) => {
+        song.promise = createRequestPromise(
+          song.pbs_track,
+          song.pbs_artist,
+          song.id
+        );
+        return song;
+      });
+      const advancedSearchNeeded = await getInSeries(songListWithPromises);
+
+      const advancedListWithPromises = advancedSearchNeeded.map((song) => {
+        song.promise = createRequestPromise(
+          stripString(song.pbs_track),
+          stripString(song.pbs_artist),
+          song.id
+        );
+        return song;
+      });
+
+      await getInSeries(advancedListWithPromises);
+      alert.info('Search Complete.');
+      setCompletedSearch(true);
+      setLoading(false);
+    }
+    searchAndSetSongData();
   };
 
   const saveSongs = () => {

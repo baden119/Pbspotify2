@@ -5,7 +5,6 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
-import SelectedPlaylist from './SelectedPlaylist';
 
 const CreateDate = (date) => {
   return new Intl.DateTimeFormat('en-AU', {
@@ -42,7 +41,16 @@ const BeforeSearch = () => {
 };
 
 const DuringSearch = () => {
-  const { SongList, ResultCount } = useContext(PBSpotifyContext);
+  const { SongList } = useContext(PBSpotifyContext);
+
+  let ResultCount = 0;
+
+  SongList.forEach((song) => {
+    if (song.spotify_URI) {
+      ResultCount++;
+    }
+  });
+  console.log(ResultCount);
 
   return (
     <Table striped bordered size='sm'>
