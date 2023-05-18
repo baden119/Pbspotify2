@@ -16,7 +16,7 @@ const PlaylistMaker = () => {
     try {
       const res = await Spotify_API.createPlaylist(Spotify_ID.id, {
         name: playlistName,
-        public: false,
+        public: true,
         description: 'Created by PBSpotify.',
       });
       console.log(res);

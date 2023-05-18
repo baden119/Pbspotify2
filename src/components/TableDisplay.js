@@ -50,7 +50,6 @@ const DuringSearch = () => {
       ResultCount++;
     }
   });
-  console.log(ResultCount);
 
   return (
     <Table striped bordered size='sm'>
@@ -163,8 +162,7 @@ const AfterSearch = () => {
 };
 
 function TableDisplay() {
-  const { CompletedSearch, Loading, SongList, SelectedPlaylist } =
-    useContext(PBSpotifyContext);
+  const { CompletedSearch, Loading, SongList } = useContext(PBSpotifyContext);
 
   const renderTable = () => {
     if (SongList.length && !Loading && !CompletedSearch) {
@@ -174,16 +172,9 @@ function TableDisplay() {
     } else return <AfterSearch SongList={SongList} />;
   };
 
-  const renderPlaylist = () => {
-    if (Object.keys(SelectedPlaylist).length !== 0) {
-      return <SelectedPlaylist />;
-    }
-  };
-
   return (
     <Row className='TableDisplay'>
       <Col>{renderTable()}</Col>
-      {renderPlaylist()}
     </Row>
   );
 }

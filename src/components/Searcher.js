@@ -114,6 +114,7 @@ const Searcher = () => {
       });
 
       await getInSeries(advancedListWithPromises);
+
       alert.info('Search Complete.');
       setCompletedSearch(true);
       setLoading(false);
@@ -128,7 +129,7 @@ const Searcher = () => {
     const API_limit = 99;
 
     SongList.forEach((song) => {
-      if (song.spotify_match_found && !song.exclude_result) {
+      if (song.spotify_URI && !song.exclude_result) {
         URI_array = [...URI_array, song.spotify_URI];
       }
     });

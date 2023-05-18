@@ -9,8 +9,8 @@ function PlaylistSelecter() {
   useEffect(() => {
     Spotify_API.getUserPlaylists(Spotify_ID.id).then(
       function (data) {
+        console.log(data);
         setplaylists(data.items);
-
         if (Object.keys(SelectedPlaylist).length === 0) {
           setSelectedPlaylist(data.items[0]);
         }
