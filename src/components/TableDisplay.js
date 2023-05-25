@@ -3,8 +3,9 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
-import Spinner from 'react-bootstrap/Spinner';
 import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
+import { Progress } from 'react-sweet-progress';
+import 'react-sweet-progress/lib/style.css';
 
 const CreateDate = (date) => {
   return new Intl.DateTimeFormat('en-AU', {
@@ -41,15 +42,7 @@ const BeforeSearch = () => {
 };
 
 const DuringSearch = () => {
-  const { SongList } = useContext(PBSpotifyContext);
-
-  let ResultCount = 0;
-
-  SongList.forEach((song) => {
-    if (song.spotify_URI) {
-      ResultCount++;
-    }
-  });
+  const { SongList, ResultCount } = useContext(PBSpotifyContext);
 
   return (
     <Table striped bordered size='sm'>
@@ -70,14 +63,12 @@ const DuringSearch = () => {
                   {song.pbs_track} / {song.pbs_artist}{' '}
                 </td>
                 <td colSpan='2' rowSpan='0' className='bigSpan Centered'>
-                  <h5>Searching...</h5>
-                  <div id='loadingContainer'>
-                    <Spinner id='searchLoading' animation='grow' />
-                  </div>
-                  <h6>Results Returned</h6>
-                  <h3>
-                    {ResultCount} / {SongList.length}
-                  </h3>
+                  <Progress
+                    width='75%'
+                    strokeWidth={3}
+                    type='circle'
+                    percent={ResultCount}
+                  />
                 </td>
               </tr>
             );

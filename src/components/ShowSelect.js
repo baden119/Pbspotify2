@@ -2,12 +2,13 @@ import React, { useEffect, useContext, useState } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
+import Container from 'react-bootstrap/Container';
 import axios from 'axios';
 import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
 import { HardCodedShowList } from './ShowList';
 
 const Showselect = () => {
-  const { setSongList, setCompletedSearch } = useContext(PBSpotifyContext);
+  const { setSongList } = useContext(PBSpotifyContext);
 
   // Set number of episodes to fetch
   const episodeCount = 3;
@@ -67,7 +68,6 @@ const Showselect = () => {
             const songList = [];
             const episodedata = await getEpisodeData(episode);
             episodedata.forEach((item) => {
-              // Condition here shortens array for testing.
               const song = {
                 id: idcount,
                 pbs_track: item.track,
@@ -95,7 +95,6 @@ const Showselect = () => {
 
         // flat() concaternates the seperate episode arrays down into a single array.
         setSongList(songList.flat());
-        setCompletedSearch(false);
       }
     };
 
@@ -138,9 +137,11 @@ const Showselect = () => {
   };
 
   return (
-    <Row>
-      <Col>{renderShowSelect()}</Col>
-    </Row>
+    <Container>
+      <Row>
+        <Col>{renderShowSelect()}</Col>
+      </Row>
+    </Container>
   );
 };
 

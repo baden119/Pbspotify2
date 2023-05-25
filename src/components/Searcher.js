@@ -12,51 +12,30 @@ const Searcher = () => {
     setLoading,
     Spotify_API,
     SelectedPlaylist,
+    setResultCount,
     setSongList,
     setPlaylistTracks,
     setCompletedSearch,
   } = useContext(PBSpotifyContext);
 
-  const delayTime = 75;
+  const delayTime = 125;
   const alert = useAlert();
 
   const SpotifySearch = () => {
-    const delay = (ms = delayTime) => new Promise((r) => setTimeout(r, ms));
-
-    // Strips common symbols and abbreviations from data provided by the PBS API, used if initial search returns no results.
-    const stripString = (string) => {
-      if (string === null) {
-        return '';
-      }
-      string = string.split('-')[0];
-      string = string.split('(')[0];
-      string = string.split('+')[0];
-      string = string.split('[')[0];
-      string = string.split('&')[0];
-      string = string.split('ft.')[0];
-      string = string.split('feat.')[0];
-      string = string.split('feat')[0];
-      string = string.split('FT')[0];
-      string = string.split('Ft.')[0];
-
-      // Just remove dont cut rest of string.
-      // string=string.split('|')[0]
-      return string;
-    };
-
-    const createRequestPromise = (pbs_track, pbs_artist, id) => {
-      return new Promise(function (resolve, reject) {
-        Spotify_API.searchTracks(pbs_track + ' ' + pbs_artist, {
-          limit: 1,
-        }).then(function (res) {
-          if (res.tracks.items[0]) {
-            resolve(res.tracks.items[0]);
-          } else {
-            console.log('No Results Found', id);
-            resolve(false);
-          }
-        });
-      });
+    // Modifys track and artist string data recieved from the PBS API, helps Spotify API search accuracy.
+    const modifyInputString = (inputString) => {
+      if (inputString) {
+        inputString = inputString.split('[')[0];
+        inputString = inputString.split('-')[0];
+        inputString = inputString.split('(')[0];
+        inputString = inputString.split('ft.')[0];
+        inputString = inputString.split('feat.')[0];
+        inputString = inputString.split('feat')[0];
+        inputString = inputString.split('FT')[0];
+        inputString = inputString.split('Ft.')[0];
+        inputString = inputString.replace(/[^a-zA-Z\s,&]/g, '');
+        return inputString;
+      } else return;
     };
 
     // Updates a song object with data returned from the Spotify API
@@ -68,58 +47,56 @@ const Searcher = () => {
       return song;
     };
 
-    const getInSeries = async (songListWithPromises) => {
-      let advancedSearchNeeded = [];
-      for (let song of songListWithPromises) {
-        await delay().then(
-          song.promise.then(function (result) {
-            if (result) {
-              song = updateSongWithResults(song, result);
-              const songListCopy = [...SongList];
-              songListCopy[song.id] = song;
-              setSongList(songListCopy);
-            } else {
-              song.response = false;
-              console.log('Song Not Found', song.id);
-              advancedSearchNeeded.push(song);
-            }
-          })
-        );
-      }
-      return advancedSearchNeeded;
+    // Creates a percentage count of completed search requests which is used by the loading spinner (in TableDisplay component)
+    const updateCompletedCount = (responseCount) => {
+      const newCount = Math.round((responseCount / SongList.length) * 100);
+      setResultCount(newCount);
     };
 
-    async function searchAndSetSongData() {
-      setLoading(true);
-      setCompletedSearch(false);
-      const songListCopy = [...SongList];
+    // Takes an array of songs and searches Spotify API for each song, has a delay between each API request to avoid 429 errors
+    async function throttledSearch(songs) {
+      const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      let songListWithResponses = [];
+      for (let i = 0; i < songs.length; i++) {
+        Spotify_API.searchTracks(
+          `track:${modifyInputString(
+            songs[i].pbs_track
+          )} artist:${modifyInputString(songs[i].pbs_artist)}`,
+          {
+            limit: 1,
+            type: 'track',
+          }
+        ).then(function (response) {
+          if (response.tracks.items[0]) {
+            songs[i] = updateSongWithResults(
+              songs[i],
+              response.tracks.items[0]
+            );
+            songListWithResponses.push(songs[i]);
+            updateCompletedCount(songListWithResponses.length);
+          } else {
+            songs[i].response = false;
+            songListWithResponses.push(songs[i]);
+            updateCompletedCount(songListWithResponses.length);
+          }
+        });
+        await delay(delayTime);
+      }
+      return songListWithResponses;
+    }
 
-      const songListWithPromises = songListCopy.map((song) => {
-        song.promise = createRequestPromise(
-          song.pbs_track,
-          song.pbs_artist,
-          song.id
-        );
-        return song;
-      });
-      const advancedSearchNeeded = await getInSeries(songListWithPromises);
-
-      const advancedListWithPromises = advancedSearchNeeded.map((song) => {
-        song.promise = createRequestPromise(
-          stripString(song.pbs_track),
-          stripString(song.pbs_artist),
-          song.id
-        );
-        return song;
-      });
-
-      await getInSeries(advancedListWithPromises);
-
+    // Search routine, alters state values and passes a copy of SongList data into the throttledSearch function. Upon return updates context API with updated SongList.
+    setLoading(true);
+    setCompletedSearch(false);
+    let songListCopy = JSON.parse(JSON.stringify(SongList));
+    throttledSearch(songListCopy).then(function (result) {
+      setSongList(result);
+      console.log(result);
       alert.info('Search Complete.');
       setCompletedSearch(true);
       setLoading(false);
-    }
-    searchAndSetSongData();
+      setResultCount(0);
+    });
   };
 
   const saveSongs = () => {
