@@ -91,7 +91,6 @@ const Searcher = () => {
     let songListCopy = JSON.parse(JSON.stringify(SongList));
     throttledSearch(songListCopy).then(function (result) {
       setSongList(result);
-      console.log(result);
       alert.info('Search Complete.');
       setCompletedSearch(true);
       setLoading(false);

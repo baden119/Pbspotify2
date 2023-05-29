@@ -64,8 +64,8 @@ const DuringSearch = () => {
                 </td>
                 <td colSpan='2' rowSpan='0' className='bigSpan Centered'>
                   <Progress
-                    width='75%'
-                    strokeWidth={3}
+                    strokeWidth={5}
+                    width={200}
                     type='circle'
                     percent={ResultCount}
                   />
