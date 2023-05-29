@@ -10,9 +10,6 @@ import { HardCodedShowList } from './ShowList';
 const Showselect = () => {
   const { setSongList } = useContext(PBSpotifyContext);
 
-  // Set number of episodes to fetch
-  const episodeCount = 3;
-
   const [selectedShow, setSelectedShow] = useState(
     JSON.parse(localStorage.getItem('localShowStorage')) || {}
   );
@@ -25,16 +22,14 @@ const Showselect = () => {
   }, [selectedShow]);
 
   // Get Song list for selected show, called by useEffect on show selection.
-  // Structure of async functions taken from
-  // https://www.taniarascia.com/promise-all-with-async-await/
   const getSongList = () => {
+    // Fetches data about 10 most recent episodes of selected show from PBS API
     const getEpisodeList = async () => {
       if (selectedShow.url != null) {
         let episodeList = [];
-        //Loop through all episodes episodes of selected show
         try {
           let res = await axios.get(
-            `${selectedShow.url}/episodes?numAfter=${episodeCount}&numBefore=${episodeCount}`
+            `${selectedShow.url}/episodes?numAfter=10&numBefore=10`
           );
           res.data.forEach((episode) => {
             episodeList = [...episodeList, episode];
@@ -50,55 +45,68 @@ const Showselect = () => {
       }
     };
 
+    // Fetches a track-list for a single episode of a PBS Show. Returns track-list and broadcast date.
     const getEpisodeData = async (episode) => {
       try {
         let response = await axios.get(`${episode.episodeRestUrl}/playlists`);
-        return response.data;
+        return {
+          pbs_tracks: response.data,
+          pbs_date: episode.start,
+        };
       } catch (e) {
         console.error('Episode Data Query', e);
       }
     };
 
-    const runAsyncFunctions = async () => {
+    // Filters out episodes that contain no track-list data. Ensures spotify playlist of decent length.
+    const filterEpisodes = (episodeArray) => {
+      let filteredCount = 0;
+      let selectedArray = [];
+
+      episodeArray.forEach((episode) => {
+        if (filteredCount < episodeCount) {
+          if (episode.pbs_tracks.length > 1) {
+            filteredCount += 1;
+          }
+          selectedArray.push(episode);
+        }
+      });
+      return selectedArray;
+    };
+
+    // Set number of episodes to use for spotify playlist
+    const episodeCount = 4;
+
+    // Runs getEpisodeList, getEpisodeData and filterEpisode functions to gather data from the PBS API. Creates a song object for each PBS track with track, artist and broadcast date info. Sets an array of these objects to the Context API
+    const getAndSetPbsData = async () => {
       if (selectedShow.url != null) {
         let idcount = 0;
         const episodes = await getEpisodeList();
-        const songList = await Promise.all(
-          episodes.map(async (episode) => {
-            const songList = [];
-            const episodedata = await getEpisodeData(episode);
-            episodedata.forEach((item) => {
-              const song = {
-                id: idcount,
-                pbs_track: item.track,
-                pbs_artist: item.artist,
-                pbs_date: episode.start,
-              };
-              idcount += 1;
-              songList.push(song);
-            });
-            return songList;
-          })
+
+        const allEpisodes = await Promise.all(
+          episodes.map(async (episode) => await getEpisodeData(episode))
         );
+        const filteredEpisodes = filterEpisodes(allEpisodes);
 
-        // For Testing (Force unfindable track into search)
+        const songListArray = filteredEpisodes.map((episode, index) => {
+          const song = episode.pbs_tracks.map((item) => {
+            const song = {
+              id: idcount,
+              pbs_track: item.track,
+              pbs_artist: item.artist,
+              pbs_date: episode.pbs_date,
+            };
+            idcount += 1;
+            return song;
+          });
+          return song;
+        });
 
-        // let newSongList = songList.flat().slice(0, 10);
-        // newSongList.push({
-        //   id: 11,
-        //   pbs_track:
-        //     'ikjshdkjashdkajsd ajhsgdkajsghdkjashd ashdiausgdiaugsdkjasd',
-        //   pbs_artist: 'oisuadoiansdi aosiduhuaiosdgoai aosudghioausdgo',
-        //   pbs_date: new Date(),
-        // });
-        // setSongList(newSongList);
-
-        // flat() concaternates the seperate episode arrays down into a single array.
-        setSongList(songList.flat());
+        setSongList(songListArray.flat());
       }
     };
 
-    runAsyncFunctions();
+    getAndSetPbsData();
   };
 
   // Handler for Show Selection dropdown.
