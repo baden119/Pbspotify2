@@ -8,14 +8,15 @@ import { useAlert } from 'react-alert';
 const Searcher = () => {
   const {
     CompletedSearch,
+    PlaylistName,
     SongList,
     setLoading,
     Spotify_API,
-    SelectedPlaylist,
     setResultCount,
     setSongList,
-    setPlaylistTracks,
     setCompletedSearch,
+    setSearchSwitch,
+    SearchSwitch,
   } = useContext(PBSpotifyContext);
 
   const delayTime = 125;
@@ -99,66 +100,85 @@ const Searcher = () => {
   };
 
   const saveSongs = () => {
-    let URI_array = [];
+    console.log('save songs button pushed', PlaylistName);
+    setSearchSwitch(!SearchSwitch);
+    // From Playlist MAker component
 
-    // Spotify has a limit on how many songs can be added to a playlist with one request.
-    const API_limit = 99;
+    // try {
+    //   const res = await Spotify_API.createPlaylist(Spotify_ID.id, {
+    //     name: playlistText,
+    //     public: true,
+    //     description: 'Created by PBSpotify.',
+    //   });
+    //   console.log(res);
+    //   alert.success(res.name + ' Playlist Created!');
+    //   setPlaylistText('');
+    //   setCustomName(true);
+    // } catch (err) {
+    //   alert.error('Error: Playlist needs a name');
+    //   console.error(err);
+    // }
 
-    SongList.forEach((song) => {
-      if (song.spotify_URI && !song.exclude_result) {
-        URI_array = [...URI_array, song.spotify_URI];
-      }
-    });
+    // let URI_array = [];
 
-    let adjusted_arrays = URI_array.reduce((adjusted, item, index) => {
-      const limit_index = Math.floor(index / API_limit);
+    // // Spotify has a limit on how many songs can be added to a playlist with one request.
+    // const API_limit = 99;
 
-      if (!adjusted[limit_index]) {
-        adjusted[limit_index] = []; //Start a new limited array
-      }
+    // SongList.forEach((song) => {
+    //   if (song.spotify_URI && !song.exclude_result) {
+    //     URI_array = [...URI_array, song.spotify_URI];
+    //   }
+    // });
 
-      adjusted[limit_index].push(item);
-      return adjusted;
-    }, []);
+    // let adjusted_arrays = URI_array.reduce((adjusted, item, index) => {
+    //   const limit_index = Math.floor(index / API_limit);
 
-    adjusted_arrays.map(async (array) => {
-      try {
-        await Spotify_API.addTracksToPlaylist(SelectedPlaylist.id, array);
-        fetchPlaylistTracks();
-      } catch (err) {
-        console.error(err);
-      }
-    });
+    //   if (!adjusted[limit_index]) {
+    //     adjusted[limit_index] = []; //Start a new limited array
+    //   }
 
-    alert.success('Success! Songs saved to Spotify Playlist');
+    //   adjusted[limit_index].push(item);
+    //   return adjusted;
+    // }, []);
 
-    //Duplicated code from SelectedPlaylist Component
-    const fetchPlaylistTracks = async () => {
-      let PlaylistTracks = [];
-      try {
-        const res = await Spotify_API.getPlaylistTracks(SelectedPlaylist.id);
-        res.items.forEach((item, index) => {
-          PlaylistTracks.push({
-            id: index,
-            track: item.track.name,
-            artist: item.track.artists[0].name,
-          });
-        });
-        setPlaylistTracks(PlaylistTracks);
-      } catch (err) {
-        console.error(err);
-      }
-    };
+    // adjusted_arrays.map(async (array) => {
+    //   try {
+    //     await Spotify_API.addTracksToPlaylist(SelectedPlaylist.id, array);
+    //     fetchPlaylistTracks();
+    //   } catch (err) {
+    //     console.error(err);
+    //   }
+    // });
+
+    // alert.success('Success! Songs saved to Spotify Playlist');
+
+    // //Duplicated code from SelectedPlaylist Component
+    // const fetchPlaylistTracks = async () => {
+    //   let PlaylistTracks = [];
+    //   try {
+    //     const res = await Spotify_API.getPlaylistTracks(SelectedPlaylist.id);
+    //     res.items.forEach((item, index) => {
+    //       PlaylistTracks.push({
+    //         id: index,
+    //         track: item.track.name,
+    //         artist: item.track.artists[0].name,
+    //       });
+    //     });
+    //     setPlaylistTracks(PlaylistTracks);
+    //   } catch (err) {
+    //     console.error(err);
+    //   }
+    // };
   };
 
   const renderSearchButton = () => {
-    if (Spotify_API != null && Object.keys(SongList).length !== 0) {
+    if (
+      Spotify_API != null &&
+      Object.keys(SongList).length !== 0 &&
+      !CompletedSearch
+    ) {
       return (
-        <Button
-          variant={CompletedSearch ? 'success' : 'primary'}
-          size='lg'
-          onClick={() => SpotifySearch()}
-        >
+        <Button size='lg' onClick={() => SpotifySearch()}>
           Search Spotify for Songs
         </Button>
       );
@@ -167,15 +187,15 @@ const Searcher = () => {
 
   const renderSaveSongsButton = () => {
     //logged in to render anything
-    if (Spotify_API != null) {
-      if (Object.keys(SelectedPlaylist).length !== 0 && CompletedSearch) {
-        return (
-          <Button onClick={() => saveSongs()} size='lg'>
-            Save Songs to Playlist
-          </Button>
-        );
-      }
-    }
+    // if (Spotify_API != null) {
+    //   if (CompletedSearch) {
+    return (
+      <Button onClick={() => saveSongs()} size='lg'>
+        Save Songs to Playlist
+      </Button>
+    );
+    //   }
+    // }
   };
 
   return (

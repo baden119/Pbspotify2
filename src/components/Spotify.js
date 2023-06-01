@@ -3,12 +3,10 @@ import SpotifyWebApi from 'spotify-web-api-js';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Login from './Login';
 import TodoList from './TodoList';
 import PlaylistMaker from './PlaylistMaker';
-import PlaylistSelecter from './PlaylistSelecter';
 import { homeURL } from './config';
 
 import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
@@ -33,14 +31,14 @@ function Spotify() {
   const {
     setLoading,
     setResultCount,
-    setSelectedPlaylist,
     setSongList,
     setPlaylistTracks,
     setCompletedSearch,
+    setSelectedShowName,
     setSpotify_API,
-    setCreateNewPlaylist,
+    SelectedShowName,
     Spotify_ID,
-    CreateNewPlaylist,
+    setPlaylistName,
   } = useContext(PBSpotifyContext);
 
   useEffect(() => {
@@ -53,43 +51,9 @@ function Spotify() {
     // eslint-disable-next-line
   }, []);
 
-  const onChangeHandler = (event) => {
-    // setSelectedPlaylist({});
-    setCreateNewPlaylist(JSON.parse(event.target.value));
-  };
-
-  const renderPlaylistSelect = () => {
-    if (Spotify_ID) {
-      return (
-        <Form>
-          <Form.Check
-            type='radio'
-            name='playlistSelectRadio'
-            label='Create a new Spotify playlist'
-            value={true}
-            onChange={onChangeHandler}
-            checked={CreateNewPlaylist}
-          />
-          <Form.Check
-            type='radio'
-            name='playlistSelectRadio'
-            label='Add to one of your playlists'
-            value={false}
-            onChange={onChangeHandler}
-            checked={!CreateNewPlaylist}
-          />
-        </Form>
-      );
-    }
-  };
-
-  const renderPlaylistComponent = () => {
-    if (Spotify_ID) {
-      if (CreateNewPlaylist) {
-        return <PlaylistMaker />;
-      } else {
-        return <PlaylistSelecter />;
-      }
+  const renderPlaylistName = () => {
+    if (Spotify_ID && SelectedShowName.length) {
+      return <PlaylistMaker />;
     }
   };
 
@@ -115,25 +79,26 @@ function Spotify() {
     console.log('Reset');
     localStorage.clear();
     setSpotify_API(null);
-    setSelectedPlaylist({});
     setSongList([]);
-    setPlaylistTracks([]);
     setCompletedSearch(false);
     setLoading(false);
     setResultCount(0);
-    setCreateNewPlaylist(true);
+    setSelectedShowName('');
     window.location.replace(homeURL());
+    setPlaylistName('');
   };
 
   return (
     <Container>
+      <Button variant='primary' size='sm' onClick={() => Reset()}>
+        Reset
+      </Button>
       {renderLoginButtons()}
       <Row>
         <TodoList />
       </Row>
-      <Row>{renderPlaylistSelect()}</Row>
       <Row>
-        <Col>{renderPlaylistComponent()}</Col>
+        <Col>{renderPlaylistName()}</Col>
       </Row>
     </Container>
   );

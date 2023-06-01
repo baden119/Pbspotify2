@@ -8,7 +8,8 @@ import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
 import { HardCodedShowList } from './ShowList';
 
 const Showselect = () => {
-  const { setSongList } = useContext(PBSpotifyContext);
+  const { setSongList, setCompletedSearch, setSelectedShowName } =
+    useContext(PBSpotifyContext);
 
   const [selectedShow, setSelectedShow] = useState(
     JSON.parse(localStorage.getItem('localShowStorage')) || {}
@@ -18,6 +19,7 @@ const Showselect = () => {
     getSongList();
     setSongList([]);
     localStorage.setItem('localShowStorage', JSON.stringify(selectedShow));
+    setSelectedShowName(selectedShow.name);
     // eslint-disable-next-line
   }, [selectedShow]);
 
@@ -102,7 +104,7 @@ const Showselect = () => {
           return song;
         });
 
-        setSongList(songListArray.flat());
+        setSongList(songListArray.flat().slice(0, 5));
       }
     };
 
@@ -115,6 +117,7 @@ const Showselect = () => {
       if (String(show.id) === e.target.value) {
         // Save show info state
         setSelectedShow(show);
+        setCompletedSearch(false);
       }
     });
   };
@@ -122,24 +125,29 @@ const Showselect = () => {
   // Function to render Show Select Menu or Loading message depending on load status.
   const renderShowSelect = () => {
     return (
-      <Form.Select
-        size='lg'
-        name='selected show'
-        id='show_select_dropdown'
-        placeholder='Select a PBS Show'
-        value={selectedShow.id}
-        onChange={(e) => showSelectionHandler(e)}
-      >
-        <option>Select a PBS Show</option>
-        {HardCodedShowList.map((show) => {
-          return (
-            <option key={show.id} value={show.id}>
-              {show.name}
-            </option>
-          );
-        })}
-        ;
-      </Form.Select>
+      <Form className='p-1 m-1 border border-danger'>
+        <Form.Group>
+          <Form.Label>PBS FM Show</Form.Label>
+          <Form.Select
+            size='lg'
+            name='selected show'
+            id='show_select_dropdown'
+            placeholder='Select a PBS Show'
+            value={selectedShow.id}
+            onChange={(e) => showSelectionHandler(e)}
+          >
+            <option>Select a PBS Show</option>
+            {HardCodedShowList.map((show) => {
+              return (
+                <option key={show.id} value={show.id}>
+                  {show.name}
+                </option>
+              );
+            })}
+            ;
+          </Form.Select>
+        </Form.Group>
+      </Form>
     );
     // }
   };
