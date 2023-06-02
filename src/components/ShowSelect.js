@@ -125,7 +125,10 @@ const Showselect = () => {
   const renderShowSelect = () => {
     return (
       <InputGroup className='mb-2' size='lg'>
-        <InputGroup.Text className='plain'>PBS Show:</InputGroup.Text>
+        {/* TODO Implement Breakpoint to not display this on mobile */}
+        {/* <InputGroup.Text className='plain'>
+          PBS Show:
+        </InputGroup.Text> */}
         <Form.Select
           name='selected show'
           id='show_select_dropdown'
