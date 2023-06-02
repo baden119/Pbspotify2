@@ -1,7 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import InputGroup from 'react-bootstrap/InputGroup';
 import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
 import { useAlert } from 'react-alert';
 
@@ -11,12 +13,14 @@ const Searcher = () => {
     SongList,
     setLoading,
     Spotify_API,
-    SelectedPlaylist,
+    Spotify_ID,
     setResultCount,
     setSongList,
-    setPlaylistTracks,
     setCompletedSearch,
   } = useContext(PBSpotifyContext);
+
+  const [playlistName, setPlaylistName] = useState('');
+  const [customName, setCustomName] = useState(false);
 
   const delayTime = 125;
   const alert = useAlert();
@@ -25,6 +29,7 @@ const Searcher = () => {
     // Modifys track and artist string data recieved from the PBS API, helps Spotify API search accuracy.
     const modifyInputString = (inputString) => {
       if (inputString) {
+        inputString = inputString.substring(0, 15);
         inputString = inputString.split('[')[0];
         inputString = inputString.split('-')[0];
         inputString = inputString.split('(')[0];
@@ -99,64 +104,120 @@ const Searcher = () => {
   };
 
   const saveSongs = () => {
-    let URI_array = [];
-
-    // Spotify has a limit on how many songs can be added to a playlist with one request.
-    const API_limit = 99;
-
-    SongList.forEach((song) => {
-      if (song.spotify_URI && !song.exclude_result) {
-        URI_array = [...URI_array, song.spotify_URI];
-      }
-    });
-
-    let adjusted_arrays = URI_array.reduce((adjusted, item, index) => {
-      const limit_index = Math.floor(index / API_limit);
-
-      if (!adjusted[limit_index]) {
-        adjusted[limit_index] = []; //Start a new limited array
-      }
-
-      adjusted[limit_index].push(item);
-      return adjusted;
-    }, []);
-
-    adjusted_arrays.map(async (array) => {
+    const createNewPlaylist = async () => {
       try {
-        await Spotify_API.addTracksToPlaylist(SelectedPlaylist.id, array);
-        fetchPlaylistTracks();
-      } catch (err) {
-        console.error(err);
-      }
-    });
-
-    alert.success('Success! Songs saved to Spotify Playlist');
-
-    //Duplicated code from SelectedPlaylist Component
-    const fetchPlaylistTracks = async () => {
-      let PlaylistTracks = [];
-      try {
-        const res = await Spotify_API.getPlaylistTracks(SelectedPlaylist.id);
-        res.items.forEach((item, index) => {
-          PlaylistTracks.push({
-            id: index,
-            track: item.track.name,
-            artist: item.track.artists[0].name,
-          });
+        const newPlaylist = await Spotify_API.createPlaylist(Spotify_ID.id, {
+          name: playlistName,
+          public: true,
+          description: 'Created by PBSpotify.',
         });
-        setPlaylistTracks(PlaylistTracks);
-      } catch (err) {
-        console.error(err);
+        return newPlaylist;
+      } catch (error) {
+        console.error(error);
       }
     };
+
+    const populatePlaylist = async (newPlaylistID) => {
+      let URI_array = [];
+      // Spotify has a limit on how many songs can be added to a playlist with one request.
+      const API_limit = 99;
+
+      SongList.forEach((song) => {
+        if (song.spotify_URI && !song.exclude_result) {
+          URI_array = [...URI_array, song.spotify_URI];
+        }
+      });
+      let adjusted_arrays = URI_array.reduce((adjusted, item, index) => {
+        const limit_index = Math.floor(index / API_limit);
+
+        if (!adjusted[limit_index]) {
+          adjusted[limit_index] = []; //Start a new limited array
+        }
+        adjusted[limit_index].push(item);
+        return adjusted;
+      }, []);
+
+      adjusted_arrays.map(async (array) => {
+        try {
+          Spotify_API.addTracksToPlaylist(newPlaylistID, array);
+        } catch (err) {
+          console.error(err);
+        }
+      });
+      alert.success('Success! Songs saved to Spotify Playlist');
+    };
+
+    const createAndPopulatePlaylist = async () => {
+      const newPlaylist = await createNewPlaylist();
+      await populatePlaylist(newPlaylist.id);
+    };
+
+    createAndPopulatePlaylist();
+  };
+
+  const renderPlaylistNameInput = () => {
+    const generatePlaylistName = () => {
+      const todaysDate = () => {
+        return new Intl.DateTimeFormat('en-AU', {
+          month: 'numeric',
+          year: '2-digit',
+        }).format(new Date());
+      };
+
+      return SongList[0].pbs_showName + ' | ' + todaysDate();
+    };
+
+    const renderGenerateNameButton = () => {
+      if (customName) {
+        return (
+          <Button onClick={() => setCustomName(false)} variant='background'>
+            Generate Name
+          </Button>
+        );
+      }
+    };
+
+    if (Object.keys(SongList).length !== 0) {
+      if (!customName && playlistName !== generatePlaylistName()) {
+        setPlaylistName(generatePlaylistName());
+      }
+    }
+
+    const onNameChange = (e) => {
+      setPlaylistName(e.target.value);
+      setCustomName(true);
+    };
+    if (Spotify_ID) {
+      return (
+        <InputGroup className='mb-2'>
+          <InputGroup.Text className='plain'>Playlist Name:</InputGroup.Text>
+          <Form.Control
+            type='text'
+            placeholder='New Playlist Name'
+            size='lg'
+            width='100%'
+            id='show_select_dropdown'
+            name='playlistName'
+            value={playlistName}
+            onChange={onNameChange}
+          />
+          {renderGenerateNameButton()}
+        </InputGroup>
+      );
+    }
   };
 
   const renderSearchButton = () => {
-    if (Spotify_API != null && Object.keys(SongList).length !== 0) {
+    if (
+      Spotify_API != null &&
+      Object.keys(SongList).length !== 0 &&
+      !CompletedSearch
+    ) {
       return (
         <Button
           variant={CompletedSearch ? 'success' : 'primary'}
           size='lg'
+          className='mb-2'
           onClick={() => SpotifySearch()}
         >
           Search Spotify for Songs
@@ -168,9 +229,14 @@ const Searcher = () => {
   const renderSaveSongsButton = () => {
     //logged in to render anything
     if (Spotify_API != null) {
-      if (Object.keys(SelectedPlaylist).length !== 0 && CompletedSearch) {
+      if (CompletedSearch) {
         return (
-          <Button onClick={() => saveSongs()} size='lg'>
+          <Button
+            variant='success'
+            onClick={() => saveSongs()}
+            size='lg'
+            className='mb-2'
+          >
             Save Songs to Playlist
           </Button>
         );
@@ -180,6 +246,7 @@ const Searcher = () => {
 
   return (
     <Container>
+      <Row>{renderPlaylistNameInput()}</Row>
       <Row>{renderSearchButton()}</Row>
       <Row>{renderSaveSongsButton()}</Row>
     </Container>

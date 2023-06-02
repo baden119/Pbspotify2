@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
-import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
 import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
 import { Progress } from 'react-sweet-progress';
 import 'react-sweet-progress/lib/style.css';
@@ -89,13 +89,7 @@ const DuringSearch = () => {
 };
 
 const AfterSearch = () => {
-  const { SongList, setSongList } = useContext(PBSpotifyContext);
-
-  const excludeResult = (id) => {
-    let tempSongList = SongList;
-    tempSongList[id].exclude_result = !tempSongList[id].exclude_result;
-    setSongList(tempSongList);
-  };
+  const { SongList } = useContext(PBSpotifyContext);
 
   return (
     <Table striped bordered size='sm'>
@@ -113,25 +107,11 @@ const AfterSearch = () => {
               <tr key={song.id}>
                 <td className='dateColumn'>{CreateDate(song.pbs_date)}</td>
                 <td>
-                  {song.pbs_track} / {song.pbs_artist}{' '}
+                  {song.pbs_track} / {song.pbs_artist}
                 </td>
 
-                <td>
-                  {song.exclude_result ? (
-                    <Button
-                      onClick={() => excludeResult(song.id)}
-                      className='excludedSong'
-                    >
-                      {song.spotify_track} / {song.spotify_artist}
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => excludeResult(song.id)}
-                      className='includedSong'
-                    >
-                      {song.spotify_track} / {song.spotify_artist}
-                    </Button>
-                  )}
+                <td className='PositiveResult'>
+                  {song.spotify_track} / {song.spotify_artist}
                 </td>
               </tr>
             );
@@ -155,6 +135,16 @@ const AfterSearch = () => {
 function TableDisplay() {
   const { CompletedSearch, Loading, SongList } = useContext(PBSpotifyContext);
 
+  const renderDescription = () => {
+    if (Object.keys(SongList).length !== 0) {
+      return (
+        <span className='ShowDescription'>
+          {SongList[0].pbs_showDescription}
+        </span>
+      );
+    }
+  };
+
   const renderTable = () => {
     if (SongList.length && !Loading && !CompletedSearch) {
       return <BeforeSearch />;
@@ -164,9 +154,12 @@ function TableDisplay() {
   };
 
   return (
-    <Row className='TableDisplay'>
-      <Col>{renderTable()}</Col>
-    </Row>
+    <Container>
+      <Row>{renderDescription()}</Row>
+      <Row className='TableDisplay'>
+        <Col>{renderTable()}</Col>
+      </Row>
+    </Container>
   );
 }
 

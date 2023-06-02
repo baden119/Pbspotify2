@@ -3,12 +3,8 @@ import SpotifyWebApi from 'spotify-web-api-js';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Login from './Login';
-import TodoList from './TodoList';
-import PlaylistMaker from './PlaylistMaker';
-import PlaylistSelecter from './PlaylistSelecter';
 import { homeURL } from './config';
 
 import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
@@ -40,7 +36,6 @@ function Spotify() {
     setSpotify_API,
     setCreateNewPlaylist,
     Spotify_ID,
-    CreateNewPlaylist,
   } = useContext(PBSpotifyContext);
 
   useEffect(() => {
@@ -52,46 +47,6 @@ function Spotify() {
     }
     // eslint-disable-next-line
   }, []);
-
-  const onChangeHandler = (event) => {
-    // setSelectedPlaylist({});
-    setCreateNewPlaylist(JSON.parse(event.target.value));
-  };
-
-  const renderPlaylistSelect = () => {
-    if (Spotify_ID) {
-      return (
-        <Form>
-          <Form.Check
-            type='radio'
-            name='playlistSelectRadio'
-            label='Create a new Spotify playlist'
-            value={true}
-            onChange={onChangeHandler}
-            checked={CreateNewPlaylist}
-          />
-          <Form.Check
-            type='radio'
-            name='playlistSelectRadio'
-            label='Add to one of your playlists'
-            value={false}
-            onChange={onChangeHandler}
-            checked={!CreateNewPlaylist}
-          />
-        </Form>
-      );
-    }
-  };
-
-  const renderPlaylistComponent = () => {
-    if (Spotify_ID) {
-      if (CreateNewPlaylist) {
-        return <PlaylistMaker />;
-      } else {
-        return <PlaylistSelecter />;
-      }
-    }
-  };
 
   const renderLoginButtons = () => {
     if (Spotify_ID) {
@@ -125,18 +80,7 @@ function Spotify() {
     window.location.replace(homeURL());
   };
 
-  return (
-    <Container>
-      {renderLoginButtons()}
-      <Row>
-        <TodoList />
-      </Row>
-      <Row>{renderPlaylistSelect()}</Row>
-      <Row>
-        <Col>{renderPlaylistComponent()}</Col>
-      </Row>
-    </Container>
-  );
+  return <Container>{renderLoginButtons()}</Container>;
 }
 
 export default Spotify;

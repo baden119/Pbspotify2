@@ -1,5 +1,3 @@
-/* make the customizations */
-
 $primary: #add8e6;
 $secondary: lightpink;
 $included: lightgreen;
@@ -11,6 +9,7 @@ $theme-colors: (
   'success': $included,
   'info': tomato,
   'danger': teal,
+  'background': $background,
 );
 
 $body-bg: $background;
@@ -32,7 +31,15 @@ $body-bg: $background;
 }
 
 .textInput {
-  background-color: $secondary !important;
+  background-color: $included !important;
+}
+
+.textInput2 {
+  background-color: yellowgreen !important;
+}
+
+.plain {
+  background-color: $background !important;
 }
 
 .selectedPlaylist {
@@ -48,18 +55,33 @@ $body-bg: $background;
   align-items: center;
 }
 
-#loadingContainer {
-  width: 50%;
-  margin: auto;
+.ShowDescription {
+  text-align: center;
+  font-family: 'Roboto Slab', serif;
+  font-size: 1.5em;
 }
-#searchLoading {
-  color: $primary;
-  width: 100%;
-  height: 0;
-  padding-bottom: 100%;
-  border: 2px solid;
-  border-color: rgb(57, 28, 189);
+.TableDisplay {
+  font-family: 'Gayathri', sans-serif;
+  font-size: 1.1em;
 }
+
+.PositiveResult {
+  background-color: $included !important;
+  margin: 20px;
+}
+
+// #loadingContainer {
+//   width: 50%;
+//   margin: auto;
+// }
+// #searchLoading {
+//   color: $primary;
+//   width: 100%;
+//   height: 0;
+//   padding-bottom: 100%;
+//   border: 2px solid;
+//   border-color: rgb(57, 28, 189);
+// }
 
 .bigSpan {
   width: 50%;
