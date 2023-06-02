@@ -20,7 +20,7 @@ const About = () => {
       </p>
       <Row>
         <Button
-          variant='success'
+          className='donateButton'
           size='lg'
           href='https://www.pbsfm.org.au/signup'
         >

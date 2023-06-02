@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
-import Container from 'react-bootstrap/Container';
 import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
 import { Progress } from 'react-sweet-progress';
 import 'react-sweet-progress/lib/style.css';
@@ -50,7 +49,7 @@ const DuringSearch = () => {
         <tr>
           <th>Date</th>
           <th>Song Info from PBS</th>
-          <th>Spotify Search Results</th>
+          <th>Searching...</th>
         </tr>
       </thead>
       <tbody>
@@ -154,12 +153,12 @@ function TableDisplay() {
   };
 
   return (
-    <Container>
+    <div>
       <Row>{renderDescription()}</Row>
       <Row className='TableDisplay'>
         <Col>{renderTable()}</Col>
       </Row>
-    </Container>
+    </div>
   );
 }
 

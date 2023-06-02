@@ -17,6 +17,7 @@ const Searcher = () => {
     setResultCount,
     setSongList,
     setCompletedSearch,
+    setCompletedProcess,
   } = useContext(PBSpotifyContext);
 
   const [playlistName, setPlaylistName] = useState('');
@@ -145,6 +146,7 @@ const Searcher = () => {
         }
       });
       alert.success('Success! Songs saved to Spotify Playlist');
+      setCompletedProcess(true);
     };
 
     const createAndPopulatePlaylist = async () => {
@@ -190,7 +192,8 @@ const Searcher = () => {
     if (Spotify_ID) {
       return (
         <InputGroup className='mb-2'>
-          <InputGroup.Text className='plain'>Playlist Name:</InputGroup.Text>
+          {/* TODO Fix this for mobile display */}
+          {/* <InputGroup.Text className='plain'></InputGroup.Text> */}
           <Form.Control
             type='text'
             placeholder='New Playlist Name'

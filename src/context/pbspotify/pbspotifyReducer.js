@@ -5,6 +5,7 @@ import {
   SET_COMPLETED_SEARCH,
   SET_LOADING,
   SET_RESULT_COUNT,
+  SET_COMPLETED_PROCESS,
 } from '../types';
 
 // eslint-disable-next-line
@@ -39,6 +40,11 @@ export default (state, action) => {
       return {
         ...state,
         ResultCount: action.payload,
+      };
+    case SET_COMPLETED_PROCESS:
+      return {
+        ...state,
+        CompletedProcess: action.payload,
       };
     default:
       return state;

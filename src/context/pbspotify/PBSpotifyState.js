@@ -9,6 +9,7 @@ import {
   SET_COMPLETED_SEARCH,
   SET_LOADING,
   SET_RESULT_COUNT,
+  SET_COMPLETED_PROCESS,
 } from '../types';
 
 const PBSpotifyState = (props) => {
@@ -19,6 +20,7 @@ const PBSpotifyState = (props) => {
     CompletedSearch: false,
     Loading: false,
     ResultCount: 0,
+    CompletedProcess: false,
   };
 
   const [state, dispatch] = useReducer(PBSpotifyReducer, initialState);
@@ -74,6 +76,13 @@ const PBSpotifyState = (props) => {
     });
   };
 
+  const setCompletedProcess = (status) => {
+    dispatch({
+      type: SET_COMPLETED_PROCESS,
+      payload: status,
+    });
+  };
+
   return (
     <PBSpotifyContext.Provider
       value={{
@@ -83,11 +92,13 @@ const PBSpotifyState = (props) => {
         CompletedSearch: state.CompletedSearch,
         Loading: state.Loading,
         ResultCount: state.ResultCount,
+        CompletedProcess: state.CompletedProcess,
         setSpotify_API,
         setSongList,
         setCompletedSearch,
         setLoading,
         setResultCount,
+        setCompletedProcess,
       }}
     >
       {props.children}

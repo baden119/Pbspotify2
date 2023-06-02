@@ -97,6 +97,18 @@ $body-bg: $background;
   background-color: $secondary !important;
 }
 
+.donateButton {
+  background-color: gold !important;
+  font-size: 1.4em !important;
+  font-weight: 600 !important;
+  justify-content: center;
+  align-items: center;
+}
+
+.completedProcessMessage {
+  font-size: 1.2em;
+}
+
 #loggedInDisplay {
   text-align: center;
   background-color: $included !important;

@@ -8,7 +8,8 @@ import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
 import { HardCodedShowList } from './ShowList';
 
 const Showselect = () => {
-  const { setSongList, setCompletedSearch } = useContext(PBSpotifyContext);
+  const { setSongList, setCompletedSearch, setCompletedProcess } =
+    useContext(PBSpotifyContext);
 
   const [selectedShow, setSelectedShow] = useState(
     JSON.parse(localStorage.getItem('localShowStorage')) || {}
@@ -18,6 +19,7 @@ const Showselect = () => {
     setSongList([]);
     getSongList();
     setCompletedSearch(false);
+    setCompletedProcess(false);
     localStorage.setItem('localShowStorage', JSON.stringify(selectedShow));
     // eslint-disable-next-line
   }, [selectedShow]);
