@@ -1,9 +1,11 @@
-import React, { useContext, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import InputGroup from 'react-bootstrap/InputGroup';
+import Col from 'react-bootstrap/Col';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import Switch from 'react-switch';
 import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
 import { useAlert } from 'react-alert';
 
@@ -21,7 +23,7 @@ const Searcher = () => {
   } = useContext(PBSpotifyContext);
 
   const [playlistName, setPlaylistName] = useState('');
-  const [customName, setCustomName] = useState(false);
+  const [autoGenerateName, setAutoGenerateName] = useState(true);
 
   const delayTime = 125;
   const alert = useAlert();
@@ -169,43 +171,51 @@ const Searcher = () => {
       return SongList[0].pbs_showName + ' | ' + todaysDate();
     };
 
-    const renderGenerateNameButton = () => {
-      if (customName) {
-        return (
-          <Button onClick={() => setCustomName(false)} variant='background'>
-            Generate Name
-          </Button>
-        );
-      }
+    const onSwitch = () => {
+      setAutoGenerateName(!autoGenerateName);
     };
 
+    // Automatically change playlist name when new show selected
     if (Object.keys(SongList).length !== 0) {
-      if (!customName && playlistName !== generatePlaylistName()) {
+      if (autoGenerateName && playlistName !== generatePlaylistName()) {
         setPlaylistName(generatePlaylistName());
       }
     }
 
     const onNameChange = (e) => {
       setPlaylistName(e.target.value);
-      setCustomName(true);
+      setAutoGenerateName(false);
     };
     if (Spotify_ID) {
       return (
-        <InputGroup className='mb-2'>
-          {/* TODO Fix this for mobile display */}
-          {/* <InputGroup.Text className='plain'></InputGroup.Text> */}
-          <Form.Control
-            type='text'
-            placeholder='New Playlist Name'
-            size='lg'
-            width='100%'
-            id='show_select_dropdown'
-            name='playlistName'
-            value={playlistName}
-            onChange={onNameChange}
-          />
-          {renderGenerateNameButton()}
-        </InputGroup>
+        <Fragment>
+          <Col xs={10}>
+            <FloatingLabel controlId='playlist_input' label='Playlist Name'>
+              <Form.Control
+                type='text'
+                placeholder='New Playlist Name'
+                name='playlistName'
+                value={playlistName}
+                onChange={onNameChange}
+                size='lg'
+              />
+            </FloatingLabel>
+          </Col>
+          <Col xs={2}>
+            <Row>
+              <small>Auto Generate</small>
+            </Row>
+            <Row className='justify-content-center'>
+              <Switch
+                className='react-switch'
+                onChange={onSwitch}
+                checked={autoGenerateName}
+                offColor='#bb8bb6'
+                onColor='#81A684'
+              />
+            </Row>
+          </Col>
+        </Fragment>
       );
     }
   };
@@ -217,12 +227,7 @@ const Searcher = () => {
       !CompletedSearch
     ) {
       return (
-        <Button
-          variant={CompletedSearch ? 'success' : 'primary'}
-          size='lg'
-          className='mb-2'
-          onClick={() => SpotifySearch()}
-        >
+        <Button variant='primary' size='lg' onClick={() => SpotifySearch()}>
           Search Spotify for Songs
         </Button>
       );
@@ -250,7 +255,7 @@ const Searcher = () => {
   return (
     <Container>
       <Row>{renderPlaylistNameInput()}</Row>
-      <Row>{renderSearchButton()}</Row>
+      <Row className='my-2'>{renderSearchButton()}</Row>
       <Row>{renderSaveSongsButton()}</Row>
     </Container>
   );

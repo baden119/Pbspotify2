@@ -1,18 +1,25 @@
-$primary: #add8e6;
-$secondary: lightpink;
-$included: lightgreen;
-$background: lightgrey;
+$primary: #81a684;
+$secondary: #8ac926;
+$included: #81a684;
+$background: #fac9b7;
+$input-bg: #d89cbf;
 
 $theme-colors: (
   'primary': $primary,
   'secondary': $secondary,
   'success': $included,
-  'info': tomato,
-  'danger': teal,
   'background': $background,
+  'navbar': #bb8bb6,
 );
 
 $body-bg: $background;
+
+.appName {
+  font-family: 'Pirata One', cursive;
+  text-decoration: none;
+  color: black;
+  font-size: 3em;
+}
 
 .dateColumn {
   font-size: smaller;
@@ -21,9 +28,13 @@ $body-bg: $background;
 }
 
 #show_select_dropdown {
-  background-color: darkgray;
+  background-color: $input-bg;
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;
+}
+
+#playlist_input {
+  background-color: $input-bg;
 }
 
 #playlist_select_dropdown {
@@ -34,19 +45,8 @@ $body-bg: $background;
   background-color: $included !important;
 }
 
-.textInput2 {
-  background-color: yellowgreen !important;
-}
-
 .plain {
   background-color: $background !important;
-}
-
-.selectedPlaylist {
-  // text-align: center;
-  list-style-type: circle;
-  font-size: smaller;
-  // padding-left: 0;
 }
 
 .Centered {
@@ -60,27 +60,11 @@ $body-bg: $background;
   font-family: 'Roboto Slab', serif;
   font-size: 1.5em;
 }
-// .TableDisplay {
-//   font-size: 1.1em;
-// }
 
 .PositiveResult {
-  background-color: $included !important;
+  background-color: $input-bg !important;
   margin: 20px;
 }
-
-// #loadingContainer {
-//   width: 50%;
-//   margin: auto;
-// }
-// #searchLoading {
-//   color: $primary;
-//   width: 100%;
-//   height: 0;
-//   padding-bottom: 100%;
-//   border: 2px solid;
-//   border-color: rgb(57, 28, 189);
-// }
 
 .bigSpan {
   width: 50%;

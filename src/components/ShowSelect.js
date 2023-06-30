@@ -1,8 +1,9 @@
 import React, { useEffect, useContext, useState } from 'react';
 import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
-import InputGroup from 'react-bootstrap/InputGroup';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import axios from 'axios';
 import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
 import { HardCodedShowList } from './ShowList';
@@ -126,14 +127,11 @@ const Showselect = () => {
   // Function to render Show Select Menu or Loading message depending on load status.
   const renderShowSelect = () => {
     return (
-      <InputGroup className='mb-2' size='lg'>
-        {/* TODO Implement Breakpoint to not display this on mobile */}
-        {/* <InputGroup.Text className='plain'>
-          PBS Show:
-        </InputGroup.Text> */}
+      <FloatingLabel controlId='show_select_dropdown' label='PBS Show'>
         <Form.Select
+          size='lg'
           name='selected show'
-          id='show_select_dropdown'
+          // id='show_select_dropdown'
           placeholder='Select a PBS Show'
           value={selectedShow.id}
           onChange={(e) => showSelectionHandler(e)}
@@ -148,14 +146,15 @@ const Showselect = () => {
           })}
           ;
         </Form.Select>
-      </InputGroup>
+      </FloatingLabel>
     );
-    // }
   };
 
   return (
     <Container>
-      <Row>{renderShowSelect()}</Row>
+      <Row>
+        <Col>{renderShowSelect()}</Col>
+      </Row>
     </Container>
   );
 };

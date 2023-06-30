@@ -1,11 +1,8 @@
 import React, { useEffect, useContext } from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import Login from './Login';
-import { homeURL } from './config';
+import { homeURL, scopes } from './config';
 
 import PBSpotifyContext from '../context/pbspotify/pbspotifyContext';
 
@@ -26,17 +23,9 @@ function getHashParams() {
 }
 
 function Spotify() {
-  const {
-    setLoading,
-    setResultCount,
-    setSelectedPlaylist,
-    setSongList,
-    setPlaylistTracks,
-    setCompletedSearch,
-    setSpotify_API,
-    setCreateNewPlaylist,
-    Spotify_ID,
-  } = useContext(PBSpotifyContext);
+  const { setSpotify_API, Spotify_ID } = useContext(PBSpotifyContext);
+  const CLIENT_ID = '33a2bac1ec3649429a5db59eac210602';
+  const authEndpoint = 'https://accounts.spotify.com/authorize';
 
   useEffect(() => {
     const hashParams = getHashParams();
@@ -48,36 +37,24 @@ function Spotify() {
     // eslint-disable-next-line
   }, []);
 
-  const renderLoginButtons = () => {
-    if (Spotify_ID) {
-      return (
-        <Row>
-          <Col>
-            <div id='loggedInDisplay'>
-              Logged in as <b>{Spotify_ID.display_name}</b>
-            </div>
-          </Col>
-          <Col>
-            <Button variant='primary' size='sm' onClick={() => Reset()}>
-              Logout / Reset
-            </Button>
-          </Col>
-        </Row>
-      );
-    } else return <Login />;
+  const loginUrl = `${authEndpoint}?client_id=${CLIENT_ID}&redirect_uri=${homeURL()}&scope=${scopes.join(
+    '%20'
+  )}&response_type=token&show_dialog=true`;
+
+  const spotifyLogin = async () => {
+    window.location.assign(loginUrl);
   };
-  const Reset = () => {
-    console.log('Reset');
-    localStorage.clear();
-    setSpotify_API(null);
-    setSelectedPlaylist({});
-    setSongList([]);
-    setPlaylistTracks([]);
-    setCompletedSearch(false);
-    setLoading(false);
-    setResultCount(0);
-    setCreateNewPlaylist(true);
-    window.location.replace(homeURL());
+
+  const renderLoginButtons = () => {
+    if (!Spotify_ID) {
+      return (
+        <Container className='Centered m-3'>
+          <Button className='login' size='lg' onClick={() => spotifyLogin()}>
+            Login With Spotify
+          </Button>
+        </Container>
+      );
+    }
   };
 
   return <Container>{renderLoginButtons()}</Container>;

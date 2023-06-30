@@ -63,6 +63,24 @@ const DuringSearch = () => {
                 </td>
                 <td colSpan='2' rowSpan='0' className='bigSpan Centered'>
                   <Progress
+                    theme={{
+                      error: {
+                        trailColor: 'pink',
+                        color: 'red',
+                      },
+                      default: {
+                        trailColor: 'lightblue',
+                        color: 'blue',
+                      },
+                      active: {
+                        trailColor: 'yellow',
+                        color: 'orange',
+                      },
+                      success: {
+                        trailColor: 'lime',
+                        color: 'green',
+                      },
+                    }}
                     strokeWidth={5}
                     width={200}
                     type='circle'
@@ -145,15 +163,17 @@ function TableDisplay() {
   };
 
   const renderTable = () => {
-    if (SongList.length && !Loading && !CompletedSearch) {
-      return <BeforeSearch />;
-    } else if (SongList.length && Loading && !CompletedSearch) {
-      return <DuringSearch SongList={SongList} />;
-    } else return <AfterSearch SongList={SongList} />;
+    if (Object.keys(SongList).length !== 0) {
+      if (!Loading && !CompletedSearch) {
+        return <BeforeSearch />;
+      } else if (Loading && !CompletedSearch) {
+        return <DuringSearch SongList={SongList} />;
+      } else return <AfterSearch SongList={SongList} />;
+    }
   };
 
   return (
-    <div>
+    <div className='my-2'>
       <Row>{renderDescription()}</Row>
       <Row className='TableDisplay'>
         <Col>{renderTable()}</Col>

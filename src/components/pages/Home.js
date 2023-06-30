@@ -7,7 +7,7 @@ import SearchOrDonate from '../SearchOrDonate';
 import TableDisplay from '../TableDisplay';
 
 const Home = () => (
-  <Container fluid>
+  <Container fluid='md'>
     <Spotify />
     <Showselect />
     <SearchOrDonate />
