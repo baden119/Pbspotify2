@@ -37,7 +37,7 @@ function MyNavbar() {
           </Navbar.Text>
           <Navbar.Text className='mx-1'>
             <Button variant='primary' size='sm' onClick={() => Reset()}>
-              Logout / Reset
+              Logout
             </Button>
           </Navbar.Text>
         </Fragment>

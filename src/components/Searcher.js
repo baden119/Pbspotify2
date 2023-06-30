@@ -189,7 +189,7 @@ const Searcher = () => {
     if (Spotify_ID) {
       return (
         <Fragment>
-          <Col xs={10}>
+          <Col xs={8}>
             <FloatingLabel controlId='playlist_input' label='Playlist Name'>
               <Form.Control
                 type='text'
@@ -201,9 +201,9 @@ const Searcher = () => {
               />
             </FloatingLabel>
           </Col>
-          <Col xs={2}>
+          <Col xs={4}>
             <Row>
-              <small>Auto Generate</small>
+              <small>Auto Generate Name</small>
             </Row>
             <Row className='justify-content-center'>
               <Switch
