@@ -186,36 +186,36 @@ const Searcher = () => {
       setPlaylistName(e.target.value);
       setAutoGenerateName(false);
     };
-    // if (Spotify_ID) {
-    return (
-      <Fragment>
-        <Col xs={8}>
-          <FloatingLabel controlId='playlist_input' label='Playlist Name'>
-            <Form.Control
-              type='text'
-              placeholder='New Playlist Name'
-              name='playlistName'
-              value={playlistName}
-              onChange={onNameChange}
-              size='lg'
-            />
-          </FloatingLabel>
-        </Col>
-        <Col xs={4}>
-          <Row className='align-items-center justify-content-center'>
-            <small>Auto Generate</small>
-            <Switch
-              className='react-switch'
-              onChange={onSwitch}
-              checked={autoGenerateName}
-              offColor='#bb8bb6'
-              onColor='#81A684'
-            />
-          </Row>
-        </Col>
-      </Fragment>
-    );
-    // }
+    if (Spotify_ID) {
+      return (
+        <Fragment>
+          <Col xs={8}>
+            <FloatingLabel controlId='playlist_input' label='Playlist Name'>
+              <Form.Control
+                type='text'
+                placeholder='New Playlist Name'
+                name='playlistName'
+                value={playlistName}
+                onChange={onNameChange}
+                size='lg'
+              />
+            </FloatingLabel>
+          </Col>
+          <Col xs={4}>
+            <Row className='align-items-center justify-content-center'>
+              <small>Auto Generate</small>
+              <Switch
+                className='react-switch'
+                onChange={onSwitch}
+                checked={autoGenerateName}
+                offColor='#bb8bb6'
+                onColor='#81A684'
+              />
+            </Row>
+          </Col>
+        </Fragment>
+      );
+    }
   };
 
   const renderSearchButton = () => {
