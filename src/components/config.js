@@ -1,4 +1,4 @@
-const deploy = true;
+const deploy = false;
 
 export const homeURL = () => {
   if (deploy) {

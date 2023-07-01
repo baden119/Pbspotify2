@@ -14,7 +14,8 @@ $theme-colors: (
 
 $body-bg: $background;
 
-.appName {
+.appName,
+.appName:hover {
   font-family: 'Pirata One', cursive;
   text-decoration: none;
   color: black;
@@ -87,6 +88,15 @@ $body-bg: $background;
   font-weight: 600 !important;
   justify-content: center;
   align-items: center;
+}
+
+.aboutPageText {
+  font-size: 1.3em !important;
+  font-weight: 400 !important;
+}
+
+.aboutPageImage {
+  width: 50%;
 }
 
 .completedProcessMessage {
