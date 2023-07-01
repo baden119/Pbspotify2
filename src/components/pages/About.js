@@ -37,7 +37,7 @@ const About = () => {
         </Col>
         <Col xs={12} sm={4} className='mb-5'>
           <a
-            href='www.linkedin.com/in/baden-allen-951099275'
+            href='https://www.linkedin.com/in/baden-allen-951099275'
             target='_blank'
             rel='noreferrer'
           >
